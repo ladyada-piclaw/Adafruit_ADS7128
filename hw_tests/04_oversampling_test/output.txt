@@ -1,20 +1,22 @@
-ADS7128 Oversampling Noise Test
---------------------------------
-Reference voltage on CH3: 2.85 V
+ADS7128 Oversampling Test (PWM Signal)
+---------------------------------------
+Fast PWM (~31kHz) on Metro pin 10 -> ADS7128 CH0
+~31kHz, 50% duty cycle
 
 OSR    Mean(V)  Min    Max    Range
-NONE   2.85     2332   2334   2
-2x     2.84     2322   2323   1
-4x     2.83     2313   2315   2
-8x     2.82     2309   2311   2
-16x    2.82     2308   2309   1
-32x    2.82     2307   2308   1
-64x    2.82     2306   2307   1
-128x   2.82     2306   2307   1
+NONE   3.83     0   4094   4094
+2x     1.75     0   4094   4094
+4x     2.96     2   4090   4088
+8x     2.43     3   3580   3577
+16x    2.51     2045   2302   257
+32x    2.51     2045   2174   129
+64x    2.52     2045   2126   81
+128x   2.53     2047   2109   62
 
-Test 1: All means within 0.3V of reference: PASS
-Test 2: OSR_128 range <= OSR_NONE range: PASS
+Test 1: OSR_NONE range > 500 counts: PASS
+Test 2: OSR_128 range < OSR_NONE range: PASS
+Test 3: OSR_128 mean within 1.0V of 2.5V: PASS
 
 ================================
-RESULTS: 2/2 tests passed
+RESULTS: 3/3 tests passed
 ================================
