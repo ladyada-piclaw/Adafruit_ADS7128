@@ -1,0 +1,24 @@
+ADS7128 Statistics Test
+------------------------
+
+Test 1: Min/Max tracking across voltage change
+  CH0=HIGH: CH1 reads 5.00 V
+  Max=4091 Min=4090 (should be similar)
+  CH0=LOW: CH1 reads 0.00 V
+  Max=4091 Min=0
+  Max - Min = 4091 counts
+  PASS: Max > Min by >1000 counts
+
+Test 2: resetStatistics clears min/max
+  After reset + CH0=HIGH readings:
+  Max=4091 Min=4091
+  Max - Min = 0 counts
+  PASS: Max - Min < 100
+
+Test 3: getRecent matches analogRead
+  analogRead=4091 getRecent=4091 diff=0
+  PASS: difference < 20
+
+================================
+RESULTS: 3/3 tests passed
+================================

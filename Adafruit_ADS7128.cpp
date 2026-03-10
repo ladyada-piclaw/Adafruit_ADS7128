@@ -325,8 +325,11 @@ uint16_t Adafruit_ADS7128::getRecent(uint8_t channel) {
 }
 
 bool Adafruit_ADS7128::resetStatistics() {
-  // Set CH_RST bit to reset statistics
-  return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_CH_RST);
+  // Toggle STATS_EN: writing 1 clears statistics and restarts recording
+  if (!_clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
+    return false;
+  }
+  return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN);
 }
 
 // ---------------------------------------------------------------------------
