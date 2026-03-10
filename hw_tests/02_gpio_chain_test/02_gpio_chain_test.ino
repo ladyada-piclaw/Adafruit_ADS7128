@@ -24,8 +24,6 @@ void setup() {
   while (!Serial) {
     delay(10);
   }
-  delay(500);
-
   Serial.println(F("ADS7128 GPIO Chain Walk Test"));
   Serial.println(F("-----------------------------"));
 
