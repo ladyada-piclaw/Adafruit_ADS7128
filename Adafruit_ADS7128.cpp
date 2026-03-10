@@ -11,46 +11,24 @@
 
 #include "Adafruit_ADS7128.h"
 
-/**
- * @brief Construct a new Adafruit_ADS7128 object
- */
 Adafruit_ADS7128::Adafruit_ADS7128() {
   _i2c = nullptr;
   _crc_enabled = false;
   _crc_error = false;
 }
 
-/**
- * @brief Destroy the Adafruit_ADS7128 object
- */
 Adafruit_ADS7128::~Adafruit_ADS7128() {
   if (_i2c) {
     delete _i2c;
   }
 }
 
-/**
- * @brief Initialize the ADS7128
- *
- * Performs:
- * 1. I2C device initialization
- * 2. Software reset (write RST=1b to GENERAL_CFG)
- * 3. Wait for reset completion
- * 4. ADC calibration (write CAL=1b, wait for auto-clear)
- * 5. Clear BOR flag (write 1b to BOR)
- * 6. Enable CRC (write CRC_EN=1b to GENERAL_CFG)
- *
- * @param addr I2C address (default 0x11)
- * @param wire Pointer to TwoWire instance
- * @return true on success, false on failure
- */
 bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
   if (_i2c) {
     delete _i2c;
   }
 
-  // General call reset first to clear any lingering CRC state
-  // This resets ALL I2C devices that support it, but ensures clean state
+  // General call reset to clear any lingering CRC state
   wire->beginTransmission(0x00);
   wire->write(0x06);
   wire->endTransmission();
@@ -61,23 +39,19 @@ bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
     return false;
   }
 
-  // CRC is disabled at this point - reset clears it
   _crc_enabled = false;
 
-  // Software reset: write RST=1b to GENERAL_CFG
+  // Software reset
   if (!_writeRegister(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_RST)) {
     return false;
   }
-
-  // Wait for reset to complete (~1ms)
   delay(5);
 
-  // ADC calibration: write CAL=1b, then poll until it auto-clears
+  // ADC calibration
   if (!_writeRegister(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_CAL)) {
     return false;
   }
 
-  // Poll for calibration complete (CAL bit clears when done)
   uint16_t timeout = 1000;
   while (timeout--) {
     uint8_t cfg = _readRegister(ADS7128_REG_GENERAL_CFG);
@@ -87,35 +61,21 @@ bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
     delay(1);
   }
   if (timeout == 0) {
-    return false; // Calibration timed out
+    return false;
   }
 
-  // Clear BOR flag by writing 1b to it
+  // Clear BOR flag
   if (!_writeRegister(ADS7128_REG_SYSTEM_STATUS, ADS7128_BIT_BOR)) {
     return false;
   }
 
-  // CRC disabled by default - the CRC byte format for writes is not yet
-  // verified on hardware. Call enableCRC(true) after begin() to enable.
-  _crc_enabled = false;
-
   return true;
 }
 
-/**
- * @brief Configure a channel as analog input, digital input, or digital output
- *
- * | Mode                    | PIN_CFG | GPIO_CFG | GPO_DRIVE_CFG |
- * |-------------------------|---------|----------|---------------|
- * | ADS7128_ANALOG          | 0       | x        | x             |
- * | ADS7128_INPUT           | 1       | 0        | x             |
- * | ADS7128_OUTPUT          | 1       | 1        | 1             |
- * | ADS7128_OUTPUT_OPENDRAIN| 1       | 1        | 0             |
- *
- * @param channel Channel number (0-7)
- * @param mode Pin mode
- * @return true on success, false on I2C error or invalid channel
- */
+// ---------------------------------------------------------------------------
+// GPIO Functions
+// ---------------------------------------------------------------------------
+
 bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
   if (channel > 7) {
     return false;
@@ -125,14 +85,12 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
 
   switch (mode) {
   case ADS7128_ANALOG:
-    // PIN_CFG = 0 (analog), GPIO_CFG don't care
     if (!_clearBits(ADS7128_REG_PIN_CFG, mask)) {
       return false;
     }
     break;
 
   case ADS7128_INPUT:
-    // PIN_CFG = 1 (GPIO), GPIO_CFG = 0 (input)
     if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
       return false;
     }
@@ -142,7 +100,6 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
     break;
 
   case ADS7128_OUTPUT:
-    // PIN_CFG = 1 (GPIO), GPIO_CFG = 1 (output), GPO_DRIVE_CFG = 1 (push-pull)
     if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
       return false;
     }
@@ -155,7 +112,6 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
     break;
 
   case ADS7128_OUTPUT_OPENDRAIN:
-    // PIN_CFG = 1 (GPIO), GPIO_CFG = 1 (output), GPO_DRIVE_CFG = 0 (open-drain)
     if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
       return false;
     }
@@ -174,20 +130,12 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
   return true;
 }
 
-/**
- * @brief Set digital output level using atomic set/clear operations
- *
- * @param channel Channel number (0-7)
- * @param value true=HIGH, false=LOW
- * @return true on success, false on I2C error
- */
 bool Adafruit_ADS7128::digitalWrite(uint8_t channel, bool value) {
   if (channel > 7) {
     return false;
   }
 
   uint8_t mask = 1 << channel;
-
   if (value) {
     return _setBits(ADS7128_REG_GPO_VALUE, mask);
   } else {
@@ -195,12 +143,6 @@ bool Adafruit_ADS7128::digitalWrite(uint8_t channel, bool value) {
   }
 }
 
-/**
- * @brief Read digital input level from GPI_VALUE register
- *
- * @param channel Channel number (0-7)
- * @return Input state (true=HIGH, false=LOW)
- */
 bool Adafruit_ADS7128::digitalRead(uint8_t channel) {
   if (channel > 7) {
     return false;
@@ -210,12 +152,10 @@ bool Adafruit_ADS7128::digitalRead(uint8_t channel) {
   return (val & (1 << channel)) != 0;
 }
 
-/**
- * @brief Enable or disable CRC on I2C interface
- *
- * @param enable true=enable CRC, false=disable
- * @return true on success, false on I2C error
- */
+// ---------------------------------------------------------------------------
+// CRC Functions
+// ---------------------------------------------------------------------------
+
 bool Adafruit_ADS7128::enableCRC(bool enable) {
   bool result;
   if (enable) {
@@ -230,58 +170,305 @@ bool Adafruit_ADS7128::enableCRC(bool enable) {
   return result;
 }
 
-/**
- * @brief Check if CRC error detected
- *
- * @return true if CRC_ERR_IN flag is set
- */
 bool Adafruit_ADS7128::getCRCError() {
   uint8_t status = _readRegister(ADS7128_REG_SYSTEM_STATUS);
   return (status & ADS7128_BIT_CRC_ERR_IN) != 0;
 }
 
-/**
- * @brief Clear CRC error flag by writing 1b to CRC_ERR_IN
- *
- * @return true on success, false on I2C error
- */
 bool Adafruit_ADS7128::clearCRCError() {
   _crc_error = false;
   return _writeRegister(ADS7128_REG_SYSTEM_STATUS, ADS7128_BIT_CRC_ERR_IN);
 }
 
 // ---------------------------------------------------------------------------
-// Private Methods - Low-level register access with opcode protocol
+// ADC Functions - Manual Mode
 // ---------------------------------------------------------------------------
 
-/**
- * @brief Read a single register using opcode 0x10
- *
- * Frame: [opcode 0x10, reg_addr] then read [data] (or [data, crc] if CRC
- * enabled)
- *
- * @param reg Register address
- * @return Register value (0 on error)
- */
+uint16_t Adafruit_ADS7128::analogRead(uint8_t channel) {
+  if (channel > 7) {
+    return 0xFFFF;
+  }
+
+  // Enable statistics (required for RECENT registers)
+  if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
+    return 0xFFFF;
+  }
+
+  // Select channel: write to CHANNEL_SEL[3:0], preserve ZCD_CHID[7:4]
+  uint8_t chanSel = _readRegister(ADS7128_REG_CHANNEL_SEL);
+  chanSel = (chanSel & 0xF0) | (channel & 0x0F);
+  if (!_writeRegister(ADS7128_REG_CHANNEL_SEL, chanSel)) {
+    return 0xFFFF;
+  }
+
+  // Trigger conversion: set CNVST bit
+  if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_CNVST)) {
+    return 0xFFFF;
+  }
+
+  // Wait for conversion (device stretches SCL, but small delay is safer)
+  delayMicroseconds(10);
+
+  // Read RECENT_CHn_LSB and MSB
+  uint8_t lsbReg = ADS7128_REG_RECENT_LSB_CH0 + (channel * 2);
+  return _read12BitValue(lsbReg);
+}
+
+float Adafruit_ADS7128::analogReadVoltage(uint8_t channel, float vref) {
+  uint16_t raw = analogRead(channel);
+  if (raw == 0xFFFF) {
+    return -1.0;
+  }
+  return (raw / 4096.0) * vref;
+}
+
+// ---------------------------------------------------------------------------
+// ADC Functions - Auto-Sequence Mode
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::setSequenceChannels(uint8_t channelMask) {
+  return _writeRegister(ADS7128_REG_AUTO_SEQ_CH_SEL, channelMask);
+}
+
+bool Adafruit_ADS7128::startSequence() {
+  // Enable statistics
+  if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
+    return false;
+  }
+
+  // Enable channel ID appending to data
+  if (!_setBits(ADS7128_REG_DATA_CFG, ADS7128_APPEND_CHID)) {
+    return false;
+  }
+
+  // Set CONV_MODE=1 (autonomous) in OPMODE_CFG
+  if (!_setBits(ADS7128_REG_OPMODE_CFG, ADS7128_BIT_CONV_MODE)) {
+    return false;
+  }
+
+  // Set SEQ_MODE=1 and SEQ_START=1 in SEQUENCE_CFG
+  return _writeRegister(ADS7128_REG_SEQUENCE_CFG,
+                        ADS7128_BIT_SEQ_MODE | ADS7128_BIT_SEQ_START);
+}
+
+bool Adafruit_ADS7128::stopSequence() {
+  // Clear SEQ_START bit
+  return _clearBits(ADS7128_REG_SEQUENCE_CFG, ADS7128_BIT_SEQ_START);
+}
+
+uint16_t Adafruit_ADS7128::readSequenceResult(uint8_t *channel) {
+  // Read 2 bytes of conversion data from device
+  uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, 0x00};
+  uint8_t response[2];
+
+  if (!_i2c->write_then_read(cmd, 2, response, 2)) {
+    return 0xFFFF;
+  }
+
+  // Data format with APPEND_CHID: [D11-D4], [D3-D0, CHID3-CHID0]
+  uint16_t raw = ((uint16_t)response[0] << 4) | ((response[1] >> 4) & 0x0F);
+
+  if (channel != nullptr) {
+    *channel = response[1] & 0x0F;
+  }
+
+  return raw;
+}
+
+// ---------------------------------------------------------------------------
+// Oversampling Configuration
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::setOversampling(ads7128_osr_t osr) {
+  return _writeRegister(ADS7128_REG_OSR_CFG, (uint8_t)osr & 0x07);
+}
+
+ads7128_osr_t Adafruit_ADS7128::getOversampling() {
+  uint8_t val = _readRegister(ADS7128_REG_OSR_CFG);
+  return (ads7128_osr_t)(val & 0x07);
+}
+
+// ---------------------------------------------------------------------------
+// Statistics Functions
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::enableStatistics(bool enable) {
+  if (enable) {
+    return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN);
+  } else {
+    return _clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN);
+  }
+}
+
+uint16_t Adafruit_ADS7128::getMax(uint8_t channel) {
+  if (channel > 7) {
+    return 0xFFFF;
+  }
+  uint8_t lsbReg = ADS7128_REG_MAX_LSB_CH0 + (channel * 2);
+  return _read12BitValue(lsbReg);
+}
+
+uint16_t Adafruit_ADS7128::getMin(uint8_t channel) {
+  if (channel > 7) {
+    return 0xFFFF;
+  }
+  uint8_t lsbReg = ADS7128_REG_MIN_LSB_CH0 + (channel * 2);
+  return _read12BitValue(lsbReg);
+}
+
+uint16_t Adafruit_ADS7128::getRecent(uint8_t channel) {
+  if (channel > 7) {
+    return 0xFFFF;
+  }
+  uint8_t lsbReg = ADS7128_REG_RECENT_LSB_CH0 + (channel * 2);
+  return _read12BitValue(lsbReg);
+}
+
+bool Adafruit_ADS7128::resetStatistics() {
+  // Set CH_RST bit to reset statistics
+  return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_CH_RST);
+}
+
+// ---------------------------------------------------------------------------
+// Digital Window Comparator
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::enableDWC(bool enable) {
+  if (enable) {
+    return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_DWC_EN);
+  } else {
+    return _clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_DWC_EN);
+  }
+}
+
+bool Adafruit_ADS7128::setHighThreshold(uint8_t channel, uint16_t threshold) {
+  if (channel > 7 || threshold > 0x0FFF) {
+    return false;
+  }
+
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+
+  // HIGH_TH_MSB goes in register baseAddr+1
+  uint8_t msb = (threshold >> 4) & 0xFF;
+  if (!_writeRegister(baseAddr + 1, msb)) {
+    return false;
+  }
+
+  // HIGH_TH_LSB[3:0] goes in upper nibble of HYSTERESIS register (baseAddr)
+  uint8_t hystReg = _readRegister(baseAddr);
+  hystReg = (hystReg & 0x0F) | ((threshold & 0x0F) << 4);
+  return _writeRegister(baseAddr, hystReg);
+}
+
+bool Adafruit_ADS7128::setLowThreshold(uint8_t channel, uint16_t threshold) {
+  if (channel > 7 || threshold > 0x0FFF) {
+    return false;
+  }
+
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+
+  // LOW_TH_MSB goes in register baseAddr+3
+  uint8_t msb = (threshold >> 4) & 0xFF;
+  if (!_writeRegister(baseAddr + 3, msb)) {
+    return false;
+  }
+
+  // LOW_TH_LSB[3:0] goes in upper nibble of EVENT_COUNT register (baseAddr+2)
+  uint8_t evtReg = _readRegister(baseAddr + 2);
+  evtReg = (evtReg & 0x0F) | ((threshold & 0x0F) << 4);
+  return _writeRegister(baseAddr + 2, evtReg);
+}
+
+bool Adafruit_ADS7128::setHysteresis(uint8_t channel, uint8_t hysteresis) {
+  if (channel > 7 || hysteresis > 15) {
+    return false;
+  }
+
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+  uint8_t hystReg = _readRegister(baseAddr);
+  hystReg = (hystReg & 0xF0) | (hysteresis & 0x0F);
+  return _writeRegister(baseAddr, hystReg);
+}
+
+bool Adafruit_ADS7128::setEventCount(uint8_t channel, uint8_t count) {
+  if (channel > 7 || count > 15) {
+    return false;
+  }
+
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+  uint8_t evtReg = _readRegister(baseAddr + 2);
+  evtReg = (evtReg & 0xF0) | (count & 0x0F);
+  return _writeRegister(baseAddr + 2, evtReg);
+}
+
+uint8_t Adafruit_ADS7128::getEventFlags() {
+  return _readRegister(ADS7128_REG_EVENT_FLAG);
+}
+
+uint8_t Adafruit_ADS7128::getEventHighFlags() {
+  return _readRegister(ADS7128_REG_EVENT_HIGH_FLAG);
+}
+
+uint8_t Adafruit_ADS7128::getEventLowFlags() {
+  return _readRegister(ADS7128_REG_EVENT_LOW_FLAG);
+}
+
+bool Adafruit_ADS7128::clearEventFlags() {
+  // Write 0xFF to clear all flags (W1C registers)
+  if (!_writeRegister(ADS7128_REG_EVENT_HIGH_FLAG, 0xFF)) {
+    return false;
+  }
+  return _writeRegister(ADS7128_REG_EVENT_LOW_FLAG, 0xFF);
+}
+
+// ---------------------------------------------------------------------------
+// ALERT Pin Configuration
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::configureAlert(bool pushPull, uint8_t logic) {
+  uint8_t cfg = (logic & 0x03);
+  if (pushPull) {
+    cfg |= 0x04; // ALERT_DRIVE bit
+  }
+  return _writeRegister(ADS7128_REG_ALERT_PIN_CFG, cfg);
+}
+
+bool Adafruit_ADS7128::setAlertChannels(uint8_t channelMask) {
+  return _writeRegister(ADS7128_REG_ALERT_CH_SEL, channelMask);
+}
+
+// ---------------------------------------------------------------------------
+// Sampling Rate
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::setSamplingRate(bool slowOsc, uint8_t divider) {
+  uint8_t cfg = _readRegister(ADS7128_REG_OPMODE_CFG);
+  cfg = (cfg & 0xE0); // Preserve CONV_ON_ERR and CONV_MODE
+  cfg |= (divider & 0x0F);
+  if (slowOsc) {
+    cfg |= 0x10; // OSC_SEL bit
+  }
+  return _writeRegister(ADS7128_REG_OPMODE_CFG, cfg);
+}
+
+// ---------------------------------------------------------------------------
+// Private Methods - Low-level register access
+// ---------------------------------------------------------------------------
+
 uint8_t Adafruit_ADS7128::_readRegister(uint8_t reg) {
   uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, reg};
 
   if (_crc_enabled) {
-    // Write command, then read data + CRC
     uint8_t response[2];
     if (!_i2c->write_then_read(cmd, 2, response, 2)) {
       return 0;
     }
-
-    // Validate CRC - CRC covers only the data byte for reads
     uint8_t expected_crc = _crc8(&response[0], 1);
     if (response[1] != expected_crc) {
       _crc_error = true;
     }
-
     return response[0];
   } else {
-    // Write command, then read data
     uint8_t response;
     if (!_i2c->write_then_read(cmd, 2, &response, 1)) {
       return 0;
@@ -290,18 +477,8 @@ uint8_t Adafruit_ADS7128::_readRegister(uint8_t reg) {
   }
 }
 
-/**
- * @brief Write a single register using opcode 0x08
- *
- * Frame: [opcode 0x08, reg_addr, data] (append CRC if enabled)
- *
- * @param reg Register address
- * @param data Data to write
- * @return true on success, false on I2C error
- */
 bool Adafruit_ADS7128::_writeRegister(uint8_t reg, uint8_t data) {
   if (_crc_enabled) {
-    // CRC covers all bytes: opcode, reg_addr, data
     uint8_t cmd[4];
     cmd[0] = ADS7128_OP_SINGLE_WRITE;
     cmd[1] = reg;
@@ -314,16 +491,6 @@ bool Adafruit_ADS7128::_writeRegister(uint8_t reg, uint8_t data) {
   }
 }
 
-/**
- * @brief Set bits in a register using opcode 0x18 (atomic OR)
- *
- * Frame: [opcode 0x18, reg_addr, mask] (append CRC if enabled)
- * Bits with value 1 in mask are SET, bits with value 0 are unchanged.
- *
- * @param reg Register address
- * @param mask Bit mask (1 = set that bit)
- * @return true on success, false on I2C error
- */
 bool Adafruit_ADS7128::_setBits(uint8_t reg, uint8_t mask) {
   if (_crc_enabled) {
     uint8_t cmd[4];
@@ -338,16 +505,6 @@ bool Adafruit_ADS7128::_setBits(uint8_t reg, uint8_t mask) {
   }
 }
 
-/**
- * @brief Clear bits in a register using opcode 0x20 (atomic AND-NOT)
- *
- * Frame: [opcode 0x20, reg_addr, mask] (append CRC if enabled)
- * Bits with value 1 in mask are CLEARED, bits with value 0 are unchanged.
- *
- * @param reg Register address
- * @param mask Bit mask (1 = clear that bit)
- * @return true on success, false on I2C error
- */
 bool Adafruit_ADS7128::_clearBits(uint8_t reg, uint8_t mask) {
   if (_crc_enabled) {
     uint8_t cmd[4];
@@ -362,16 +519,18 @@ bool Adafruit_ADS7128::_clearBits(uint8_t reg, uint8_t mask) {
   }
 }
 
-/**
- * @brief Calculate CRC-8-CCITT
- *
- * Polynomial: x^8 + x^2 + x + 1 (0x07)
- * Uses bitwise implementation to save flash on AVR.
- *
- * @param data Pointer to data buffer
- * @param len Number of bytes
- * @return 8-bit CRC value
- */
+bool Adafruit_ADS7128::_readBlock(uint8_t startReg, uint8_t *buf, uint8_t len) {
+  uint8_t cmd[2] = {ADS7128_OP_BLOCK_READ, startReg};
+  return _i2c->write_then_read(cmd, 2, buf, len);
+}
+
+uint16_t Adafruit_ADS7128::_read12BitValue(uint8_t lsbReg) {
+  uint8_t lsb = _readRegister(lsbReg);
+  uint8_t msb = _readRegister(lsbReg + 1);
+  // 12-bit value: MSB[3:0] are bits 11:8, LSB[7:0] are bits 7:0
+  return ((uint16_t)(msb & 0x0F) << 8) | lsb;
+}
+
 uint8_t Adafruit_ADS7128::_crc8(uint8_t *data, uint8_t len) {
   uint8_t crc = 0x00;
   for (uint8_t i = 0; i < len; i++) {
