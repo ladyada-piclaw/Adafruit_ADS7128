@@ -1,0 +1,20 @@
+ADS7128 Oversampling Noise Test
+--------------------------------
+Reference voltage on CH3: 2.85 V
+
+OSR    Mean(V)  Min    Max    Range
+NONE   2.85     2332   2334   2
+2x     2.84     2322   2323   1
+4x     2.83     2313   2315   2
+8x     2.82     2309   2311   2
+16x    2.82     2308   2309   1
+32x    2.82     2307   2308   1
+64x    2.82     2306   2307   1
+128x   2.82     2306   2307   1
+
+Test 1: All means within 0.3V of reference: PASS
+Test 2: OSR_128 range <= OSR_NONE range: PASS
+
+================================
+RESULTS: 2/2 tests passed
+================================
