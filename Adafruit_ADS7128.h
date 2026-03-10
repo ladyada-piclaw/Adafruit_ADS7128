@@ -16,7 +16,7 @@
 #include <Arduino.h>
 
 // Default I2C address (ADDR pin to GND via ~10kΩ)
-#define ADS7128_DEFAULT_ADDR 0x11
+#define ADS7128_DEFAULT_ADDR 0x10
 
 // Opcodes (NOT standard I2C register access!)
 #define ADS7128_OP_SINGLE_READ 0x10

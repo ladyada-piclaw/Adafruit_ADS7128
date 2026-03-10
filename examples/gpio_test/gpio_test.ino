@@ -9,7 +9,7 @@
  * the state of channel 0.
  *
  * Hardware:
- * - ADS7128 at address 0x11 (ADDR to GND via ~10kΩ)
+ * - ADS7128 at address 0x10 (ADDR to GND via ~10kΩ)
  * - SDA/SCL to A4/A5 on Metro Mini
  * - 10K resistor between CH0 and CH1
  */
@@ -30,7 +30,7 @@ void setup() {
   // Initialize
   Wire.begin();
 
-  if (!ads.begin(0x11, &Wire)) {
+  if (!ads.begin(0x10, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1) {
       delay(1000);

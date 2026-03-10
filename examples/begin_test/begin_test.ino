@@ -5,7 +5,7 @@
  * Tests begin() and reads SYSTEM_STATUS register.
  *
  * Hardware:
- * - ADS7128 at address 0x11 (ADDR to GND via ~10kΩ)
+ * - ADS7128 at address 0x10 (ADDR to GND via ~10kΩ)
  * - SDA/SCL to A4/A5 on Metro Mini
  */
 
@@ -26,8 +26,8 @@ void setup() {
   Wire.begin();
 
   // Scan for device first
-  Serial.print(F("Scanning for device at 0x11... "));
-  Wire.beginTransmission(0x11);
+  Serial.print(F("Scanning for device at 0x10... "));
+  Wire.beginTransmission(0x10);
   if (Wire.endTransmission() == 0) {
     Serial.println(F("FOUND"));
   } else {
@@ -40,7 +40,7 @@ void setup() {
 
   // Initialize ADS7128
   Serial.print(F("Calling begin()... "));
-  if (ads.begin(0x11, &Wire)) {
+  if (ads.begin(0x10, &Wire)) {
     Serial.println(F("SUCCESS"));
   } else {
     Serial.println(F("FAILED"));

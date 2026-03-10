@@ -49,6 +49,13 @@ bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
     delete _i2c;
   }
 
+  // General call reset first to clear any lingering CRC state
+  // This resets ALL I2C devices that support it, but ensures clean state
+  wire->beginTransmission(0x00);
+  wire->write(0x06);
+  wire->endTransmission();
+  delay(10);
+
   _i2c = new Adafruit_I2CDevice(addr, wire);
   if (!_i2c->begin()) {
     return false;
@@ -88,11 +95,9 @@ bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
     return false;
   }
 
-  // Enable CRC - this write happens without CRC, then we track state
-  if (!_writeRegister(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_CRC_EN)) {
-    return false;
-  }
-  _crc_enabled = true;
+  // CRC disabled by default - the CRC byte format for writes is not yet
+  // verified on hardware. Call enableCRC(true) after begin() to enable.
+  _crc_enabled = false;
 
   return true;
 }
