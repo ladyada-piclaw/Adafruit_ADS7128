@@ -25,8 +25,6 @@ void setup() {
   while (!Serial) {
     delay(10);
   }
-  delay(1000);
-
   Serial.println(F(""));
   Serial.println(F("ADS7128 Begin + Communication Test"));
   Serial.println(F("-----------------------------------"));
