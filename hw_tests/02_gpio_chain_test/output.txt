@@ -1,0 +1,13 @@
+ADS7128 GPIO Chain Walk Test
+-----------------------------
+Pair CH0->CH1: HIGH=HIGH LOW=LOW ... PASS
+Pair CH1->CH2: HIGH=HIGH LOW=LOW ... PASS
+Pair CH2->CH3: HIGH=HIGH LOW=LOW ... PASS
+Pair CH3->CH4: HIGH=HIGH LOW=LOW ... PASS
+Pair CH4->CH5: HIGH=HIGH LOW=LOW ... PASS
+Pair CH5->CH6: HIGH=HIGH LOW=LOW ... PASS
+Pair CH6->CH7: HIGH=HIGH LOW=LOW ... PASS
+
+================================
+RESULTS: 7/7 tests passed
+================================
