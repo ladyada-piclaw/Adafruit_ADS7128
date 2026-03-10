@@ -16,6 +16,8 @@
 
 Adafruit_ADS7128 ads;
 
+#define ADS7128_ADDR 0x10
+
 uint8_t testsPassed = 0;
 uint8_t testsFailed = 0;
 
@@ -29,7 +31,7 @@ void setup() {
 
   Wire.begin();
 
-  if (!ads.begin(0x10)) {
+  if (!ads.begin(ADS7128_ADDR)) {
     Serial.println(F("ERROR: Failed to initialize ADS7128!"));
     while (1) {
       delay(1000);
