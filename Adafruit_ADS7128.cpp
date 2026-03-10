@@ -527,8 +527,9 @@ bool Adafruit_ADS7128::_readBlock(uint8_t startReg, uint8_t *buf, uint8_t len) {
 uint16_t Adafruit_ADS7128::_read12BitValue(uint8_t lsbReg) {
   uint8_t lsb = _readRegister(lsbReg);
   uint8_t msb = _readRegister(lsbReg + 1);
-  // 12-bit value: MSB[3:0] are bits 11:8, LSB[7:0] are bits 7:0
-  return ((uint16_t)(msb & 0x0F) << 8) | lsb;
+  // 12-bit value is MSB-aligned in 16-bit register pair:
+  //   MSB register = [D11:D4], LSB register = [D3:D0, 0, 0, 0, 0]
+  return ((uint16_t)msb << 4) | (lsb >> 4);
 }
 
 uint8_t Adafruit_ADS7128::_crc8(uint8_t *data, uint8_t len) {

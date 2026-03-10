@@ -2,27 +2,27 @@ ADS7128 ADC GPIO-Driven Voltage Divider Test
 ----------------------------------------------
 
 Test 1: CH0=HIGH(5V), CH7=LOW(GND)
-  CH1: 2816 (3.42 V)
-  CH2: 1632 (1.99 V)
-  CH3: 512 (0.63 V)
-  CH4: 3472 (4.26 V)
-  CH5: 2288 (2.77 V)
-  CH6: 1040 (1.27 V)
-  Monotonically decreasing: FAIL
+  CH1: 3501 (4.27 V)
+  CH2: 2915 (3.56 V)
+  CH3: 2333 (2.85 V)
+  CH4: 1749 (2.14 V)
+  CH5: 1161 (1.42 V)
+  CH6: 578 (0.71 V)
+  Monotonically decreasing: PASS
   CH1 > 3.0V: PASS
   CH6 < 2.0V: PASS
 
 Test 2: CH0=LOW(GND), CH7=HIGH(5V)
-  CH1: 1136 (1.41 V)
-  CH2: 2272 (2.75 V)
-  CH3: 3360 (4.10 V)
-  CH4: 384 (0.47 V)
-  CH5: 1584 (1.91 V)
-  CH6: 2880 (3.54 V)
-  Monotonically increasing: FAIL
+  CH1: 585 (0.72 V)
+  CH2: 1168 (1.43 V)
+  CH3: 1750 (2.14 V)
+  CH4: 2333 (2.85 V)
+  CH5: 2919 (3.56 V)
+  CH6: 3507 (4.28 V)
+  Monotonically increasing: PASS
   CH1 < 2.0V: PASS
   CH6 > 3.0V: PASS
 
 ================================
-RESULTS: 4/6 tests passed
+RESULTS: 6/6 tests passed
 ================================
