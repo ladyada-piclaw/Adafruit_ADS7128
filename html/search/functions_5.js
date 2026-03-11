@@ -1,11 +1,17 @@
 var searchData=
 [
+  ['getalertchannels',['getAlertChannels',['../class_adafruit___a_d_s7128.html#a8cf0e74a1f0ec4bc7f297cc697df3dbc',1,'Adafruit_ADS7128']]],
+  ['getalertlogic',['getAlertLogic',['../class_adafruit___a_d_s7128.html#a2fec8780d414cc66f98688285f0e2db3',1,'Adafruit_ADS7128']]],
+  ['getalertpushpull',['getAlertPushPull',['../class_adafruit___a_d_s7128.html#a034e0f8c003501751fa6e17435c42680',1,'Adafruit_ADS7128']]],
   ['getcrcenabled',['getCRCEnabled',['../class_adafruit___a_d_s7128.html#a4a33755344e1fea7404ce4337b3ae4a3',1,'Adafruit_ADS7128']]],
   ['getcrcerror',['getCRCError',['../class_adafruit___a_d_s7128.html#a07e3daeaa8d7e5fdecf462428aad4a73',1,'Adafruit_ADS7128']]],
   ['getdwcenabled',['getDWCEnabled',['../class_adafruit___a_d_s7128.html#aeb1e5c9610471361e4f5d6943f870a03',1,'Adafruit_ADS7128']]],
   ['geteventflags',['getEventFlags',['../class_adafruit___a_d_s7128.html#a25640c92b5082d17663da8d51adf6827',1,'Adafruit_ADS7128']]],
   ['geteventhighflags',['getEventHighFlags',['../class_adafruit___a_d_s7128.html#a967fd211833a89156cb22b36d83c480b',1,'Adafruit_ADS7128']]],
   ['geteventlowflags',['getEventLowFlags',['../class_adafruit___a_d_s7128.html#aa5637a43448a2d153ab5b8cad0ad1132',1,'Adafruit_ADS7128']]],
+  ['gethighthreshold',['getHighThreshold',['../class_adafruit___a_d_s7128.html#a6fa424e14c90855fbc61f82441ccc32c',1,'Adafruit_ADS7128']]],
+  ['gethysteresis',['getHysteresis',['../class_adafruit___a_d_s7128.html#afb3afa3f074280ed33f2f87ded545a0c',1,'Adafruit_ADS7128']]],
+  ['getlowthreshold',['getLowThreshold',['../class_adafruit___a_d_s7128.html#a1495c84a196c6d1a2efc2cf1cab0cc09',1,'Adafruit_ADS7128']]],
   ['getmax',['getMax',['../class_adafruit___a_d_s7128.html#a29babe3c6b24553fd1148df5a1d64006',1,'Adafruit_ADS7128']]],
   ['getmin',['getMin',['../class_adafruit___a_d_s7128.html#a16dda9771d90048b48a8ca52435674a1',1,'Adafruit_ADS7128']]],
   ['getoversampling',['getOversampling',['../class_adafruit___a_d_s7128.html#a635166a09885516873cf9f97fda01379',1,'Adafruit_ADS7128']]],
