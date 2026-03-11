@@ -300,6 +300,14 @@ bool Adafruit_ADS7128::enableStatistics(bool enable) {
   }
 }
 
+/**
+ * @brief Check if statistics tracking is enabled
+ * @return true if statistics (min/max/recent) tracking is active
+ */
+bool Adafruit_ADS7128::getStatisticsEnabled() {
+  return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_STATS_EN) != 0;
+}
+
 uint16_t Adafruit_ADS7128::getMax(uint8_t channel) {
   if (channel > 7) {
     return 0xFFFF;

@@ -333,6 +333,7 @@ class Adafruit_ADS7128 {
    * @return true on success, false on I2C error
    */
   bool enableStatistics(bool enable);
+  bool getStatisticsEnabled();
 
   /**
    * @brief Get maximum recorded value for a channel
