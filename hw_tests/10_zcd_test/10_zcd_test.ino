@@ -224,7 +224,13 @@ void setup() {
 
   // Set up ZCD
   setupZCD(threshold);
-  delay(200); // Let ZCD settle
+  delay(500); // Let ZCD settle and accumulate conversions
+
+  // Warmup: discard first sampling round (ZCD needs conversions to start)
+  {
+    bool hW = false, lW = false;
+    sampleZCDOutput(100, 1, &hW, &lW);
+  }
 
   // Try multiple sampling windows to detect ZCD toggling
   bool sawHigh = false, sawLow = false;
