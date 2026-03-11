@@ -103,16 +103,19 @@ void setup() {
   // ads.setSequenceChannels(0xFF);  // All 8 channels
   // ads.startSequence();
 
-  // === Digital Window Comparator (optional) ===
-  // Uncomment to enable threshold alerts:
-  // ads.setLowThreshold(0, 1000);   // Alert if CH0 < ~0.8V
-  // ads.setHighThreshold(0, 3000);  // Alert if CH0 > ~2.4V
-  // ads.enableDWC(true);
-  // ads.setAlertChannels(0x01);     // CH0 only
-  // ads.configureAlert(true, 0);    // Push-pull, active low
+  // === Digital Window Comparator ===
   Serial.println(F("\n--- Digital Window Comparator ---"));
+
+  ads.setLowThreshold(0, 1000);  // Alert if CH0 < ~0.8V
+  ads.setHighThreshold(0, 3000); // Alert if CH0 > ~2.4V
+  ads.enableDWC(true);
+  ads.setAlertChannels(0x01);  // CH0 only
+  ads.configureAlert(true, 0); // Push-pull, active low
+
   Serial.print(F("DWC: "));
   Serial.println(ads.getDWCEnabled() ? F("Enabled") : F("Disabled"));
+  Serial.println(F("CH0 thresholds: low=1000 (~0.8V), high=3000 (~2.4V)"));
+  Serial.println(F("ALERT pin: push-pull, active low"));
 
   // === RMS (optional) ===
   // Uncomment to enable RMS computation on a channel:
