@@ -3,11 +3,14 @@
  * @brief Read all 8 ADC channels in manual mode
  *
  * Reads all 8 channels and prints raw values and voltages.
- * Hardware: ADS7128 with 5V reference
+ * Change VREF below to match your supply voltage.
  */
 
 #include <Adafruit_ADS7128.h>
 #include <Wire.h>
+
+// Set this to your AVDD voltage (3.3 or 5.0)
+#define VREF 3.3
 
 Adafruit_ADS7128 adc;
 
@@ -39,7 +42,7 @@ void loop() {
 
   for (uint8_t ch = 0; ch < 8; ch++) {
     uint16_t raw = adc.analogRead(ch);
-    float voltage = adc.analogReadVoltage(ch, 5.0);
+    float voltage = adc.analogReadVoltage(ch, VREF);
 
     Serial.print(F("   "));
     Serial.print(ch);
