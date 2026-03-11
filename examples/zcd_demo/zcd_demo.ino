@@ -36,11 +36,17 @@ void setup() {
       delay(10);
   }
 
-  // Start fast PWM on pin 10 (~31kHz)
+  // Start PWM signal on pin 10 as a pseudo-AC source
   ::pinMode(PWM_PIN, OUTPUT);
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
+  // Fast PWM ~31kHz on AVR Timer1
   TCCR1A = _BV(COM1B1) | _BV(WGM10);
   TCCR1B = _BV(WGM12) | _BV(CS10);
   OCR1B = 128; // 50% duty
+#else
+  // Generic PWM (frequency varies by platform)
+  analogWrite(PWM_PIN, 128); // 50% duty
+#endif
 
   // CH0 = analog input (default) — reads the PWM signal
   // CH1 = digital output for ZCD signal (connect LED here)
