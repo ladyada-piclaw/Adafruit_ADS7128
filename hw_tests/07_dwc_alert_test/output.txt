@@ -1,0 +1,27 @@
+ADS7128 Digital Window Comparator + ALERT Test
+-------------------------------------------------
+ALERT pin on Metro D3
+
+Test 1: High threshold alert
+  Baseline CH1: 0 (0.00 V)
+  High threshold: 500
+  CH0=HIGH, CH1 now: 4091 (5.00 V)
+  Interrupt fired: YES
+  Event high flags: 0x02 (bit 1 set)
+  PASS
+
+Test 2: Low threshold alert
+  Low threshold: 2457
+  CH0=LOW, CH1 now: 0 (0.00 V)
+  Interrupt fired: YES
+  Event low flags: 0x02 (bit 1 set)
+  PASS
+
+Test 3: clearEventFlags
+  Before clear: 0x02
+  After clear: 0x00
+  PASS
+
+================================
+RESULTS: 3/3 tests passed
+================================
