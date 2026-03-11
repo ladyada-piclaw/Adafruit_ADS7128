@@ -170,6 +170,14 @@ bool Adafruit_ADS7128::enableCRC(bool enable) {
   return result;
 }
 
+/**
+ * @brief Check if CRC is enabled
+ * @return true if CRC checking is active
+ */
+bool Adafruit_ADS7128::getCRCEnabled() {
+  return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_CRC_EN) != 0;
+}
+
 bool Adafruit_ADS7128::getCRCError() {
   uint8_t status = _readRegister(ADS7128_REG_SYSTEM_STATUS);
   return (status & ADS7128_BIT_CRC_ERR_IN) != 0;
@@ -352,6 +360,14 @@ bool Adafruit_ADS7128::enableDWC(bool enable) {
   }
 }
 
+/**
+ * @brief Check if the digital window comparator is enabled
+ * @return true if DWC is active
+ */
+bool Adafruit_ADS7128::getDWCEnabled() {
+  return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_DWC_EN) != 0;
+}
+
 bool Adafruit_ADS7128::setHighThreshold(uint8_t channel, uint16_t threshold) {
   if (channel > 7 || threshold > 0x0FFF) {
     return false;
@@ -514,6 +530,18 @@ bool Adafruit_ADS7128::enableZCDOutput(uint8_t gpoChannel, bool enable) {
   }
 }
 
+/**
+ * @brief Check if ZCD output is enabled for a specific GPO channel
+ * @param gpoChannel GPO channel number (0-7)
+ * @return true if ZCD output is enabled for that channel
+ */
+bool Adafruit_ADS7128::getZCDOutputEnabled(uint8_t gpoChannel) {
+  if (gpoChannel > 7)
+    return false;
+  uint8_t mask = (1 << gpoChannel);
+  return (_readRegister(ADS7128_REG_GPO_ZCD_UPDATE_EN) & mask) != 0;
+}
+
 // ---------------------------------------------------------------------------
 // RMS Functions
 // ---------------------------------------------------------------------------
@@ -533,6 +561,14 @@ bool Adafruit_ADS7128::enableRMS(bool enable) {
   } else {
     return _clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_RMS_EN);
   }
+}
+
+/**
+ * @brief Check if RMS computation is enabled
+ * @return true if RMS module is active
+ */
+bool Adafruit_ADS7128::getRMSEnabled() {
+  return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_RMS_EN) != 0;
 }
 
 /**

@@ -244,6 +244,7 @@ class Adafruit_ADS7128 {
    * @return true on success, false on I2C error
    */
   bool enableCRC(bool enable);
+  bool getCRCEnabled();
 
   /**
    * @brief Check if CRC error detected
@@ -372,6 +373,7 @@ class Adafruit_ADS7128 {
    * @return true on success, false on I2C error
    */
   bool enableDWC(bool enable);
+  bool getDWCEnabled();
 
   /**
    * @brief Set high threshold for a channel
@@ -494,6 +496,7 @@ class Adafruit_ADS7128 {
    * @return true on success, false on I2C error
    */
   bool enableZCDOutput(uint8_t gpoChannel, bool enable);
+  bool getZCDOutputEnabled(uint8_t gpoChannel);
 
   // -------------------------------------------------------------------------
   // RMS Functions
@@ -505,6 +508,7 @@ class Adafruit_ADS7128 {
    * @return true on success, false on I2C error
    */
   bool enableRMS(bool enable);
+  bool getRMSEnabled();
 
   /**
    * @brief Set which channel the RMS module monitors
