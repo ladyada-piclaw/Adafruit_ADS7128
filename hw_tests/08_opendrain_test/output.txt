@@ -1,0 +1,21 @@
+ADS7128 Open-Drain GPIO Test
+-------------------------------
+CH0=push-pull HIGH, CH7=push-pull LOW
+
+Test 1: Open-drain LOW sinks
+  CH1=OD LOW, CH2 reads: 0.00 V
+  PASS: CH2 < 2.0V
+
+Test 2: Open-drain HIGH floats
+  CH1=OD HIGH (float), CH2 reads: 3.56 V
+  PASS: CH2 > 2.5V
+
+Test 3: Push-pull vs open-drain
+  CH1=PP LOW,  CH2: 0.00 V
+  CH1=PP HIGH, CH2: 4.16 V
+  CH1=OD HIGH, CH2: 3.56 V (from test 2)
+  PP HIGH > OD HIGH: PASS
+
+================================
+RESULTS: 3/3 tests passed
+================================
