@@ -455,6 +455,58 @@ bool Adafruit_ADS7128::setSamplingRate(bool slowOsc, uint8_t divider) {
 }
 
 // ---------------------------------------------------------------------------
+// Zero-Crossing Detection (ZCD)
+// ---------------------------------------------------------------------------
+
+bool Adafruit_ADS7128::setZCDChannel(uint8_t channel) {
+  if (channel > 7)
+    return false;
+  // ZCD_CHID is upper nibble of CHANNEL_SEL (0x11)
+  uint8_t reg = _readRegister(ADS7128_REG_CHANNEL_SEL);
+  reg = (reg & 0x0F) | (channel << 4);
+  return _writeRegister(ADS7128_REG_CHANNEL_SEL, reg);
+}
+
+bool Adafruit_ADS7128::setZCDBlanking(uint8_t count, bool multiply) {
+  uint8_t val = (count & 0x7F);
+  if (multiply) {
+    val |= 0x80; // MULT_EN bit
+  }
+  return _writeRegister(ADS7128_REG_ZCD_BLANKING_CFG, val);
+}
+
+bool Adafruit_ADS7128::setZCDOutput(uint8_t gpoChannel, uint8_t mode) {
+  if (gpoChannel > 7 || mode > 3)
+    return false;
+  // CH0-CH3 in register 0xE3, CH4-CH7 in register 0xE4
+  // Each channel gets 2 bits
+  uint8_t reg;
+  uint8_t shift;
+  if (gpoChannel < 4) {
+    reg = ADS7128_REG_GPO_VALUE_ZCD_CFG_CH0_CH3;
+    shift = gpoChannel * 2;
+  } else {
+    reg = ADS7128_REG_GPO_VALUE_ZCD_CFG_CH4_CH7;
+    shift = (gpoChannel - 4) * 2;
+  }
+  uint8_t val = _readRegister(reg);
+  val &= ~(0x03 << shift);
+  val |= (mode << shift);
+  return _writeRegister(reg, val);
+}
+
+bool Adafruit_ADS7128::enableZCDOutput(uint8_t gpoChannel, bool enable) {
+  if (gpoChannel > 7)
+    return false;
+  uint8_t mask = (1 << gpoChannel);
+  if (enable) {
+    return _setBits(ADS7128_REG_GPO_ZCD_UPDATE_EN, mask);
+  } else {
+    return _clearBits(ADS7128_REG_GPO_ZCD_UPDATE_EN, mask);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Private Methods - Low-level register access
 // ---------------------------------------------------------------------------
 

@@ -411,6 +411,41 @@ public:
    */
   bool setSamplingRate(bool slowOsc, uint8_t divider);
 
+  // -------------------------------------------------------------------------
+  // Zero-Crossing Detection (ZCD)
+  // -------------------------------------------------------------------------
+
+  /**
+   * @brief Set which analog channel the ZCD module monitors
+   * @param channel Channel number (0-7)
+   * @return true on success, false on I2C error or invalid channel
+   */
+  bool setZCDChannel(uint8_t channel);
+
+  /**
+   * @brief Configure ZCD blanking (transient rejection)
+   * @param count Blanking count (0-127, conversions to skip after ZCD event)
+   * @param multiply true = count x8, false = count x1
+   * @return true on success, false on I2C error
+   */
+  bool setZCDBlanking(uint8_t count, bool multiply = false);
+
+  /**
+   * @brief Map ZCD output to a GPO pin
+   * @param gpoChannel GPO channel (0-7, must be configured as digital output)
+   * @param mode 0=low, 1=high, 2=ZCD signal, 3=inverted ZCD
+   * @return true on success, false on I2C error or invalid channel
+   */
+  bool setZCDOutput(uint8_t gpoChannel, uint8_t mode);
+
+  /**
+   * @brief Enable or disable ZCD-to-GPO updates for a channel
+   * @param gpoChannel GPO channel (0-7)
+   * @param enable true to enable ZCD updates on this GPO
+   * @return true on success, false on I2C error
+   */
+  bool enableZCDOutput(uint8_t gpoChannel, bool enable);
+
 private:
   Adafruit_I2CDevice *_i2c;
   bool _crc_enabled;
