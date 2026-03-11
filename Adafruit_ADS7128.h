@@ -426,8 +426,8 @@ private:
   // Helper to read 12-bit value from LSB/MSB register pair
   uint16_t _read12BitValue(uint8_t lsbReg);
 
-  // CRC helper - CRC-8-CCITT polynomial 0x07
-  uint8_t _crc8(uint8_t *data, uint8_t len);
+  // CRC helper - CRC-8-CCITT polynomial 0x07 over a single byte
+  uint8_t _crc8(uint8_t byte);
 };
 
 #endif // ADAFRUIT_ADS7128_H

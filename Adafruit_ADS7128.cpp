@@ -459,19 +459,20 @@ bool Adafruit_ADS7128::setSamplingRate(bool slowOsc, uint8_t divider) {
 // ---------------------------------------------------------------------------
 
 uint8_t Adafruit_ADS7128::_readRegister(uint8_t reg) {
-  uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, reg};
-
   if (_crc_enabled) {
+    // With CRC: setup sends [opcode][CRC][reg][CRC], read returns [data][CRC]
+    uint8_t cmd[4] = {ADS7128_OP_SINGLE_READ, _crc8(ADS7128_OP_SINGLE_READ),
+                      reg, _crc8(reg)};
     uint8_t response[2];
-    if (!_i2c->write_then_read(cmd, 2, response, 2)) {
+    if (!_i2c->write_then_read(cmd, 4, response, 2)) {
       return 0;
     }
-    uint8_t expected_crc = _crc8(&response[0], 1);
-    if (response[1] != expected_crc) {
+    if (response[1] != _crc8(response[0])) {
       _crc_error = true;
     }
     return response[0];
   } else {
+    uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, reg};
     uint8_t response;
     if (!_i2c->write_then_read(cmd, 2, &response, 1)) {
       return 0;
@@ -482,12 +483,14 @@ uint8_t Adafruit_ADS7128::_readRegister(uint8_t reg) {
 
 bool Adafruit_ADS7128::_writeRegister(uint8_t reg, uint8_t data) {
   if (_crc_enabled) {
-    uint8_t cmd[4];
-    cmd[0] = ADS7128_OP_SINGLE_WRITE;
-    cmd[1] = reg;
-    cmd[2] = data;
-    cmd[3] = _crc8(cmd, 3);
-    return _i2c->write(cmd, 4);
+    // With CRC: [opcode][CRC][reg][CRC][data][CRC]
+    uint8_t cmd[6] = {ADS7128_OP_SINGLE_WRITE,
+                      _crc8(ADS7128_OP_SINGLE_WRITE),
+                      reg,
+                      _crc8(reg),
+                      data,
+                      _crc8(data)};
+    return _i2c->write(cmd, 6);
   } else {
     uint8_t cmd[3] = {ADS7128_OP_SINGLE_WRITE, reg, data};
     return _i2c->write(cmd, 3);
@@ -496,12 +499,10 @@ bool Adafruit_ADS7128::_writeRegister(uint8_t reg, uint8_t data) {
 
 bool Adafruit_ADS7128::_setBits(uint8_t reg, uint8_t mask) {
   if (_crc_enabled) {
-    uint8_t cmd[4];
-    cmd[0] = ADS7128_OP_SET_BIT;
-    cmd[1] = reg;
-    cmd[2] = mask;
-    cmd[3] = _crc8(cmd, 3);
-    return _i2c->write(cmd, 4);
+    uint8_t cmd[6] = {
+        ADS7128_OP_SET_BIT, _crc8(ADS7128_OP_SET_BIT), reg, _crc8(reg), mask,
+        _crc8(mask)};
+    return _i2c->write(cmd, 6);
   } else {
     uint8_t cmd[3] = {ADS7128_OP_SET_BIT, reg, mask};
     return _i2c->write(cmd, 3);
@@ -510,12 +511,13 @@ bool Adafruit_ADS7128::_setBits(uint8_t reg, uint8_t mask) {
 
 bool Adafruit_ADS7128::_clearBits(uint8_t reg, uint8_t mask) {
   if (_crc_enabled) {
-    uint8_t cmd[4];
-    cmd[0] = ADS7128_OP_CLEAR_BIT;
-    cmd[1] = reg;
-    cmd[2] = mask;
-    cmd[3] = _crc8(cmd, 3);
-    return _i2c->write(cmd, 4);
+    uint8_t cmd[6] = {ADS7128_OP_CLEAR_BIT,
+                      _crc8(ADS7128_OP_CLEAR_BIT),
+                      reg,
+                      _crc8(reg),
+                      mask,
+                      _crc8(mask)};
+    return _i2c->write(cmd, 6);
   } else {
     uint8_t cmd[3] = {ADS7128_OP_CLEAR_BIT, reg, mask};
     return _i2c->write(cmd, 3);
@@ -523,8 +525,29 @@ bool Adafruit_ADS7128::_clearBits(uint8_t reg, uint8_t mask) {
 }
 
 bool Adafruit_ADS7128::_readBlock(uint8_t startReg, uint8_t *buf, uint8_t len) {
-  uint8_t cmd[2] = {ADS7128_OP_BLOCK_READ, startReg};
-  return _i2c->write_then_read(cmd, 2, buf, len);
+  if (_crc_enabled) {
+    // Setup: [opcode][CRC][reg][CRC]
+    uint8_t cmd[4] = {ADS7128_OP_BLOCK_READ, _crc8(ADS7128_OP_BLOCK_READ),
+                      startReg, _crc8(startReg)};
+    // Response: [data0][CRC0][data1][CRC1]... = 2*len bytes
+    uint8_t rawLen = len * 2;
+    uint8_t raw[16]; // max 8 registers * 2
+    if (rawLen > sizeof(raw))
+      return false;
+    if (!_i2c->write_then_read(cmd, 4, raw, rawLen)) {
+      return false;
+    }
+    for (uint8_t i = 0; i < len; i++) {
+      buf[i] = raw[i * 2];
+      if (raw[i * 2 + 1] != _crc8(raw[i * 2])) {
+        _crc_error = true;
+      }
+    }
+    return true;
+  } else {
+    uint8_t cmd[2] = {ADS7128_OP_BLOCK_READ, startReg};
+    return _i2c->write_then_read(cmd, 2, buf, len);
+  }
 }
 
 uint16_t Adafruit_ADS7128::_read12BitValue(uint8_t lsbReg) {
@@ -535,16 +558,13 @@ uint16_t Adafruit_ADS7128::_read12BitValue(uint8_t lsbReg) {
   return ((uint16_t)msb << 4) | (lsb >> 4);
 }
 
-uint8_t Adafruit_ADS7128::_crc8(uint8_t *data, uint8_t len) {
-  uint8_t crc = 0x00;
-  for (uint8_t i = 0; i < len; i++) {
-    crc ^= data[i];
-    for (uint8_t j = 0; j < 8; j++) {
-      if (crc & 0x80) {
-        crc = (crc << 1) ^ 0x07;
-      } else {
-        crc <<= 1;
-      }
+uint8_t Adafruit_ADS7128::_crc8(uint8_t byte) {
+  uint8_t crc = byte;
+  for (uint8_t i = 0; i < 8; i++) {
+    if (crc & 0x80) {
+      crc = (crc << 1) ^ 0x07;
+    } else {
+      crc <<= 1;
     }
   }
   return crc;
