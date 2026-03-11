@@ -258,8 +258,11 @@ class Adafruit_ADS7128 {
   bool enableDWC(bool enable);
   bool getDWCEnabled();
   bool setHighThreshold(uint8_t channel, uint16_t threshold);
+  uint16_t getHighThreshold(uint8_t channel);
   bool setLowThreshold(uint8_t channel, uint16_t threshold);
+  uint16_t getLowThreshold(uint8_t channel);
   bool setHysteresis(uint8_t channel, uint8_t hysteresis);
+  uint8_t getHysteresis(uint8_t channel);
   bool setEventCount(uint8_t channel, uint8_t count);
   uint8_t getEventFlags();
   uint8_t getEventHighFlags();
@@ -271,7 +274,10 @@ class Adafruit_ADS7128 {
   // -------------------------------------------------------------------------
 
   bool configureAlert(bool pushPull, uint8_t logic);
+  bool getAlertPushPull();
+  uint8_t getAlertLogic();
   bool setAlertChannels(uint8_t channelMask);
+  uint8_t getAlertChannels();
 
   // -------------------------------------------------------------------------
   // Sampling Rate (Phase 2)

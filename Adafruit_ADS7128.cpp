@@ -498,6 +498,20 @@ bool Adafruit_ADS7128::setHighThreshold(uint8_t channel, uint16_t threshold) {
 }
 
 /**
+ * @brief Get high threshold for a channel
+ * @param channel Channel number (0-7)
+ * @return 12-bit threshold value, or 0xFFFF on error
+ */
+uint16_t Adafruit_ADS7128::getHighThreshold(uint8_t channel) {
+  if (channel > 7)
+    return 0xFFFF;
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+  uint8_t msb = _readRegister(baseAddr + 1);
+  uint8_t hystReg = _readRegister(baseAddr);
+  return ((uint16_t)msb << 4) | ((hystReg >> 4) & 0x0F);
+}
+
+/**
  * @brief Set low threshold for a channel
  * @param channel Channel number (0-7)
  * @param threshold 12-bit threshold value
@@ -523,6 +537,20 @@ bool Adafruit_ADS7128::setLowThreshold(uint8_t channel, uint16_t threshold) {
 }
 
 /**
+ * @brief Get low threshold for a channel
+ * @param channel Channel number (0-7)
+ * @return 12-bit threshold value, or 0xFFFF on error
+ */
+uint16_t Adafruit_ADS7128::getLowThreshold(uint8_t channel) {
+  if (channel > 7)
+    return 0xFFFF;
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+  uint8_t msb = _readRegister(baseAddr + 3);
+  uint8_t evtReg = _readRegister(baseAddr + 2);
+  return ((uint16_t)msb << 4) | ((evtReg >> 4) & 0x0F);
+}
+
+/**
  * @brief Set hysteresis for a channel
  * @param channel Channel number (0-7)
  * @param hysteresis 4-bit hysteresis value (0-15)
@@ -537,6 +565,18 @@ bool Adafruit_ADS7128::setHysteresis(uint8_t channel, uint8_t hysteresis) {
   uint8_t hystReg = _readRegister(baseAddr);
   hystReg = (hystReg & 0xF0) | (hysteresis & 0x0F);
   return _writeRegister(baseAddr, hystReg);
+}
+
+/**
+ * @brief Get hysteresis for a channel
+ * @param channel Channel number (0-7)
+ * @return 4-bit hysteresis value (0-15), or 0xFF on error
+ */
+uint8_t Adafruit_ADS7128::getHysteresis(uint8_t channel) {
+  if (channel > 7)
+    return 0xFF;
+  uint8_t baseAddr = ADS7128_REG_HYSTERESIS_CH0 + (channel * 4);
+  return _readRegister(baseAddr) & 0x0F;
 }
 
 /**
@@ -611,12 +651,36 @@ bool Adafruit_ADS7128::configureAlert(bool pushPull, uint8_t logic) {
 }
 
 /**
+ * @brief Check if ALERT pin is configured as push-pull
+ * @return true if push-pull, false if open-drain
+ */
+bool Adafruit_ADS7128::getAlertPushPull() {
+  return (_readRegister(ADS7128_REG_ALERT_PIN_CFG) & 0x04) != 0;
+}
+
+/**
+ * @brief Get ALERT pin logic configuration
+ * @return Logic value (0-3): 0=active low, 1=active high, etc.
+ */
+uint8_t Adafruit_ADS7128::getAlertLogic() {
+  return _readRegister(ADS7128_REG_ALERT_PIN_CFG) & 0x03;
+}
+
+/**
  * @brief Set which channels trigger ALERT pin
  * @param channelMask Bitmask of channels (bit 0 = CH0, etc.)
  * @return true on success, false on I2C error
  */
 bool Adafruit_ADS7128::setAlertChannels(uint8_t channelMask) {
   return _writeRegister(ADS7128_REG_ALERT_CH_SEL, channelMask);
+}
+
+/**
+ * @brief Get which channels trigger ALERT pin
+ * @return Bitmask of channels (bit 0 = CH0, etc.)
+ */
+uint8_t Adafruit_ADS7128::getAlertChannels() {
+  return _readRegister(ADS7128_REG_ALERT_CH_SEL);
 }
 
 // ---------------------------------------------------------------------------

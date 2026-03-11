@@ -114,8 +114,16 @@ void setup() {
 
   Serial.print(F("DWC: "));
   Serial.println(ads.getDWCEnabled() ? F("Enabled") : F("Disabled"));
-  Serial.println(F("CH0 thresholds: low=1000 (~0.8V), high=3000 (~2.4V)"));
-  Serial.println(F("ALERT pin: push-pull, active low"));
+  Serial.print(F("CH0 thresholds: low="));
+  Serial.print(ads.getLowThreshold(0));
+  Serial.print(F(", high="));
+  Serial.println(ads.getHighThreshold(0));
+  Serial.print(F("ALERT pin: "));
+  Serial.print(ads.getAlertPushPull() ? F("push-pull") : F("open-drain"));
+  Serial.print(F(", active "));
+  Serial.println(ads.getAlertLogic() == 0 ? F("low") : F("high"));
+  Serial.print(F("Alert channels: 0x"));
+  Serial.println(ads.getAlertChannels(), HEX);
 
   // === RMS (optional) ===
   // Uncomment to enable RMS computation on a channel:
