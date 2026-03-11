@@ -23,6 +23,12 @@ Adafruit_ADS7128::~Adafruit_ADS7128() {
   }
 }
 
+/**
+ * @brief Initialize the ADS7128
+ * @param addr I2C address (default 0x10)
+ * @param wire Pointer to TwoWire instance
+ * @return true on success, false on failure
+ */
 bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire* wire) {
   if (_i2c) {
     delete _i2c;
@@ -76,6 +82,13 @@ bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire* wire) {
 // GPIO Functions
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Configure a channel as analog input, digital input, or digital
+ * output
+ * @param channel Channel number (0-7)
+ * @param mode Pin mode (see ads7128_pin_mode_t)
+ * @return true on success, false on I2C error or invalid channel
+ */
 bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
   if (channel > 7) {
     return false;
@@ -130,6 +143,12 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
   return true;
 }
 
+/**
+ * @brief Set digital output level
+ * @param channel Channel number (0-7)
+ * @param value true=HIGH, false=LOW
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::digitalWrite(uint8_t channel, bool value) {
   if (channel > 7) {
     return false;
@@ -143,6 +162,11 @@ bool Adafruit_ADS7128::digitalWrite(uint8_t channel, bool value) {
   }
 }
 
+/**
+ * @brief Read digital input level
+ * @param channel Channel number (0-7)
+ * @return Input state (true=HIGH, false=LOW)
+ */
 bool Adafruit_ADS7128::digitalRead(uint8_t channel) {
   if (channel > 7) {
     return false;
@@ -156,6 +180,11 @@ bool Adafruit_ADS7128::digitalRead(uint8_t channel) {
 // CRC Functions
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Enable or disable CRC on I2C interface
+ * @param enable true=enable CRC, false=disable
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::enableCRC(bool enable) {
   bool result;
   if (enable) {
@@ -178,11 +207,19 @@ bool Adafruit_ADS7128::getCRCEnabled() {
   return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_CRC_EN) != 0;
 }
 
+/**
+ * @brief Check if CRC error detected
+ * @return true if CRC_ERR_IN flag is set
+ */
 bool Adafruit_ADS7128::getCRCError() {
   uint8_t status = _readRegister(ADS7128_REG_SYSTEM_STATUS);
   return (status & ADS7128_BIT_CRC_ERR_IN) != 0;
 }
 
+/**
+ * @brief Clear CRC error flag
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::clearCRCError() {
   _crc_error = false;
   return _writeRegister(ADS7128_REG_SYSTEM_STATUS, ADS7128_BIT_CRC_ERR_IN);
@@ -192,6 +229,11 @@ bool Adafruit_ADS7128::clearCRCError() {
 // ADC Functions - Manual Mode
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Read ADC value from a channel in manual mode
+ * @param channel Channel number (0-7)
+ * @return 12-bit ADC value (0-4095), or 0xFFFF on error
+ */
 uint16_t Adafruit_ADS7128::analogRead(uint8_t channel) {
   if (channel > 7) {
     return 0xFFFF;
@@ -222,6 +264,12 @@ uint16_t Adafruit_ADS7128::analogRead(uint8_t channel) {
   return _read12BitValue(lsbReg);
 }
 
+/**
+ * @brief Read ADC value and convert to voltage
+ * @param channel Channel number (0-7)
+ * @param vref Reference voltage (default 5.0V)
+ * @return Voltage in volts, or -1.0 on error
+ */
 float Adafruit_ADS7128::analogReadVoltage(uint8_t channel, float vref) {
   uint16_t raw = analogRead(channel);
   if (raw == 0xFFFF) {
@@ -234,10 +282,19 @@ float Adafruit_ADS7128::analogReadVoltage(uint8_t channel, float vref) {
 // ADC Functions - Auto-Sequence Mode
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Set channels to include in auto-sequence
+ * @param channelMask Bitmask of channels (bit 0 = CH0, etc.)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setSequenceChannels(uint8_t channelMask) {
   return _writeRegister(ADS7128_REG_AUTO_SEQ_CH_SEL, channelMask);
 }
 
+/**
+ * @brief Start auto-sequence mode
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::startSequence() {
   // Enable statistics
   if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
@@ -259,11 +316,20 @@ bool Adafruit_ADS7128::startSequence() {
                         ADS7128_BIT_SEQ_MODE | ADS7128_BIT_SEQ_START);
 }
 
+/**
+ * @brief Stop auto-sequence mode
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::stopSequence() {
   // Clear SEQ_START bit
   return _clearBits(ADS7128_REG_SEQUENCE_CFG, ADS7128_BIT_SEQ_START);
 }
 
+/**
+ * @brief Read next conversion result from sequence
+ * @param channel Pointer to store channel ID (optional, can be nullptr)
+ * @return 12-bit ADC value (0-4095), or 0xFFFF on error
+ */
 uint16_t Adafruit_ADS7128::readSequenceResult(uint8_t* channel) {
   // Read 2 bytes of conversion data from device
   uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, 0x00};
@@ -287,10 +353,19 @@ uint16_t Adafruit_ADS7128::readSequenceResult(uint8_t* channel) {
 // Oversampling Configuration
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Set oversampling ratio
+ * @param osr Oversampling ratio (see ads7128_osr_t)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setOversampling(ads7128_osr_t osr) {
   return _writeRegister(ADS7128_REG_OSR_CFG, (uint8_t)osr & 0x07);
 }
 
+/**
+ * @brief Get current oversampling ratio
+ * @return Current oversampling ratio setting
+ */
 ads7128_osr_t Adafruit_ADS7128::getOversampling() {
   uint8_t val = _readRegister(ADS7128_REG_OSR_CFG);
   return (ads7128_osr_t)(val & 0x07);
@@ -300,6 +375,11 @@ ads7128_osr_t Adafruit_ADS7128::getOversampling() {
 // Statistics Functions
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Enable or disable statistics module (min/max/recent tracking)
+ * @param enable true to enable, false to disable
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::enableStatistics(bool enable) {
   if (enable) {
     return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN);
@@ -316,6 +396,11 @@ bool Adafruit_ADS7128::getStatisticsEnabled() {
   return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_STATS_EN) != 0;
 }
 
+/**
+ * @brief Get maximum recorded value for a channel
+ * @param channel Channel number (0-7)
+ * @return 12-bit max value, or 0xFFFF on error
+ */
 uint16_t Adafruit_ADS7128::getMax(uint8_t channel) {
   if (channel > 7) {
     return 0xFFFF;
@@ -324,6 +409,11 @@ uint16_t Adafruit_ADS7128::getMax(uint8_t channel) {
   return _read12BitValue(lsbReg);
 }
 
+/**
+ * @brief Get minimum recorded value for a channel
+ * @param channel Channel number (0-7)
+ * @return 12-bit min value, or 0xFFFF on error
+ */
 uint16_t Adafruit_ADS7128::getMin(uint8_t channel) {
   if (channel > 7) {
     return 0xFFFF;
@@ -332,6 +422,11 @@ uint16_t Adafruit_ADS7128::getMin(uint8_t channel) {
   return _read12BitValue(lsbReg);
 }
 
+/**
+ * @brief Get most recent conversion value for a channel
+ * @param channel Channel number (0-7)
+ * @return 12-bit recent value, or 0xFFFF on error
+ */
 uint16_t Adafruit_ADS7128::getRecent(uint8_t channel) {
   if (channel > 7) {
     return 0xFFFF;
@@ -340,6 +435,10 @@ uint16_t Adafruit_ADS7128::getRecent(uint8_t channel) {
   return _read12BitValue(lsbReg);
 }
 
+/**
+ * @brief Reset all statistics (min/max/recent)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::resetStatistics() {
   // Toggle STATS_EN: writing 1 clears statistics and restarts recording
   if (!_clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
@@ -352,6 +451,11 @@ bool Adafruit_ADS7128::resetStatistics() {
 // Digital Window Comparator
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Enable or disable digital window comparator
+ * @param enable true to enable, false to disable
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::enableDWC(bool enable) {
   if (enable) {
     return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_DWC_EN);
@@ -368,6 +472,12 @@ bool Adafruit_ADS7128::getDWCEnabled() {
   return (_readRegister(ADS7128_REG_GENERAL_CFG) & ADS7128_BIT_DWC_EN) != 0;
 }
 
+/**
+ * @brief Set high threshold for a channel
+ * @param channel Channel number (0-7)
+ * @param threshold 12-bit threshold value
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setHighThreshold(uint8_t channel, uint16_t threshold) {
   if (channel > 7 || threshold > 0x0FFF) {
     return false;
@@ -387,6 +497,12 @@ bool Adafruit_ADS7128::setHighThreshold(uint8_t channel, uint16_t threshold) {
   return _writeRegister(baseAddr, hystReg);
 }
 
+/**
+ * @brief Set low threshold for a channel
+ * @param channel Channel number (0-7)
+ * @param threshold 12-bit threshold value
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setLowThreshold(uint8_t channel, uint16_t threshold) {
   if (channel > 7 || threshold > 0x0FFF) {
     return false;
@@ -406,6 +522,12 @@ bool Adafruit_ADS7128::setLowThreshold(uint8_t channel, uint16_t threshold) {
   return _writeRegister(baseAddr + 2, evtReg);
 }
 
+/**
+ * @brief Set hysteresis for a channel
+ * @param channel Channel number (0-7)
+ * @param hysteresis 4-bit hysteresis value (0-15)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setHysteresis(uint8_t channel, uint8_t hysteresis) {
   if (channel > 7 || hysteresis > 15) {
     return false;
@@ -417,6 +539,12 @@ bool Adafruit_ADS7128::setHysteresis(uint8_t channel, uint8_t hysteresis) {
   return _writeRegister(baseAddr, hystReg);
 }
 
+/**
+ * @brief Set event count for a channel (consecutive samples before alert)
+ * @param channel Channel number (0-7)
+ * @param count 4-bit event count (0-15, alert after count+1 samples)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setEventCount(uint8_t channel, uint8_t count) {
   if (channel > 7 || count > 15) {
     return false;
@@ -428,18 +556,34 @@ bool Adafruit_ADS7128::setEventCount(uint8_t channel, uint8_t count) {
   return _writeRegister(baseAddr + 2, evtReg);
 }
 
+/**
+ * @brief Get event flags for all channels
+ * @return 8-bit event flags (bit per channel)
+ */
 uint8_t Adafruit_ADS7128::getEventFlags() {
   return _readRegister(ADS7128_REG_EVENT_FLAG);
 }
 
+/**
+ * @brief Get high threshold event flags
+ * @return 8-bit event flags (bit per channel)
+ */
 uint8_t Adafruit_ADS7128::getEventHighFlags() {
   return _readRegister(ADS7128_REG_EVENT_HIGH_FLAG);
 }
 
+/**
+ * @brief Get low threshold event flags
+ * @return 8-bit event flags (bit per channel)
+ */
 uint8_t Adafruit_ADS7128::getEventLowFlags() {
   return _readRegister(ADS7128_REG_EVENT_LOW_FLAG);
 }
 
+/**
+ * @brief Clear all event flags
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::clearEventFlags() {
   // Write 0xFF to clear all flags (W1C registers)
   if (!_writeRegister(ADS7128_REG_EVENT_HIGH_FLAG, 0xFF)) {
@@ -452,6 +596,12 @@ bool Adafruit_ADS7128::clearEventFlags() {
 // ALERT Pin Configuration
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Configure ALERT pin output mode and logic
+ * @param pushPull true for push-pull, false for open-drain
+ * @param logic 0=active low, 1=active high, 2=pulsed low, 3=pulsed high
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::configureAlert(bool pushPull, uint8_t logic) {
   uint8_t cfg = (logic & 0x03);
   if (pushPull) {
@@ -460,6 +610,11 @@ bool Adafruit_ADS7128::configureAlert(bool pushPull, uint8_t logic) {
   return _writeRegister(ADS7128_REG_ALERT_PIN_CFG, cfg);
 }
 
+/**
+ * @brief Set which channels trigger ALERT pin
+ * @param channelMask Bitmask of channels (bit 0 = CH0, etc.)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setAlertChannels(uint8_t channelMask) {
   return _writeRegister(ADS7128_REG_ALERT_CH_SEL, channelMask);
 }
@@ -468,6 +623,12 @@ bool Adafruit_ADS7128::setAlertChannels(uint8_t channelMask) {
 // Sampling Rate
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Set sampling rate for autonomous mode
+ * @param slowOsc true for low-power oscillator, false for high-speed
+ * @param divider Clock divider (0-7)
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setSamplingRate(bool slowOsc, uint8_t divider) {
   uint8_t cfg = _readRegister(ADS7128_REG_OPMODE_CFG);
   cfg = (cfg & 0xE0); // Preserve CONV_ON_ERR and CONV_MODE
@@ -482,6 +643,11 @@ bool Adafruit_ADS7128::setSamplingRate(bool slowOsc, uint8_t divider) {
 // Zero-Crossing Detection (ZCD)
 // ---------------------------------------------------------------------------
 
+/**
+ * @brief Set which analog channel the ZCD module monitors
+ * @param channel Channel number (0-7)
+ * @return true on success, false on I2C error or invalid channel
+ */
 bool Adafruit_ADS7128::setZCDChannel(uint8_t channel) {
   if (channel > 7)
     return false;
@@ -491,6 +657,12 @@ bool Adafruit_ADS7128::setZCDChannel(uint8_t channel) {
   return _writeRegister(ADS7128_REG_CHANNEL_SEL, reg);
 }
 
+/**
+ * @brief Configure ZCD blanking (transient rejection)
+ * @param count Blanking count (0-127, conversions to skip after ZCD event)
+ * @param multiply true = count x8, false = count x1
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::setZCDBlanking(uint8_t count, bool multiply) {
   uint8_t val = (count & 0x7F);
   if (multiply) {
@@ -499,6 +671,12 @@ bool Adafruit_ADS7128::setZCDBlanking(uint8_t count, bool multiply) {
   return _writeRegister(ADS7128_REG_ZCD_BLANKING_CFG, val);
 }
 
+/**
+ * @brief Map ZCD output to a GPO pin
+ * @param gpoChannel GPO channel (0-7, must be configured as digital output)
+ * @param mode 0=low, 1=high, 2=ZCD signal, 3=inverted ZCD
+ * @return true on success, false on I2C error or invalid channel
+ */
 bool Adafruit_ADS7128::setZCDOutput(uint8_t gpoChannel, uint8_t mode) {
   if (gpoChannel > 7 || mode > 3)
     return false;
@@ -519,6 +697,12 @@ bool Adafruit_ADS7128::setZCDOutput(uint8_t gpoChannel, uint8_t mode) {
   return _writeRegister(reg, val);
 }
 
+/**
+ * @brief Enable or disable ZCD-to-GPO updates for a channel
+ * @param gpoChannel GPO channel (0-7)
+ * @param enable true to enable ZCD updates on this GPO
+ * @return true on success, false on I2C error
+ */
 bool Adafruit_ADS7128::enableZCDOutput(uint8_t gpoChannel, bool enable) {
   if (gpoChannel > 7)
     return false;

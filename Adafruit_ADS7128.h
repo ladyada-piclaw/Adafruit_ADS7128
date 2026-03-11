@@ -198,303 +198,94 @@ class Adafruit_ADS7128 {
   // Initialization
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Initialize the ADS7128
-   * @param addr I2C address (default 0x10)
-   * @param wire Pointer to TwoWire instance
-   * @return true on success, false on failure
-   */
   bool begin(uint8_t addr = ADS7128_DEFAULT_ADDR, TwoWire* wire = &Wire);
 
   // -------------------------------------------------------------------------
   // GPIO Functions (Phase 1)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Configure a channel as analog input, digital input, or digital
-   * output
-   * @param channel Channel number (0-7)
-   * @param mode Pin mode (see ads7128_pin_mode_t)
-   * @return true on success, false on I2C error or invalid channel
-   */
   bool pinMode(uint8_t channel, ads7128_pin_mode_t mode);
-
-  /**
-   * @brief Set digital output level
-   * @param channel Channel number (0-7)
-   * @param value true=HIGH, false=LOW
-   * @return true on success, false on I2C error
-   */
   bool digitalWrite(uint8_t channel, bool value);
-
-  /**
-   * @brief Read digital input level
-   * @param channel Channel number (0-7)
-   * @return Input state (true=HIGH, false=LOW)
-   */
   bool digitalRead(uint8_t channel);
 
   // -------------------------------------------------------------------------
   // CRC Functions
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Enable or disable CRC on I2C interface
-   * @param enable true=enable CRC, false=disable
-   * @return true on success, false on I2C error
-   */
   bool enableCRC(bool enable);
   bool getCRCEnabled();
-
-  /**
-   * @brief Check if CRC error detected
-   * @return true if CRC_ERR_IN flag is set
-   */
   bool getCRCError();
-
-  /**
-   * @brief Clear CRC error flag
-   * @return true on success, false on I2C error
-   */
   bool clearCRCError();
 
   // -------------------------------------------------------------------------
   // ADC Functions - Manual Mode (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Read ADC value from a channel in manual mode
-   * @param channel Channel number (0-7)
-   * @return 12-bit ADC value (0-4095), or 0xFFFF on error
-   */
   uint16_t analogRead(uint8_t channel);
-
-  /**
-   * @brief Read ADC value and convert to voltage
-   * @param channel Channel number (0-7)
-   * @param vref Reference voltage (default 5.0V)
-   * @return Voltage in volts, or -1.0 on error
-   */
   float analogReadVoltage(uint8_t channel, float vref = 5.0);
 
   // -------------------------------------------------------------------------
   // ADC Functions - Auto-Sequence Mode (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Set channels to include in auto-sequence
-   * @param channelMask Bitmask of channels (bit 0 = CH0, etc.)
-   * @return true on success, false on I2C error
-   */
   bool setSequenceChannels(uint8_t channelMask);
-
-  /**
-   * @brief Start auto-sequence mode
-   * @return true on success, false on I2C error
-   */
   bool startSequence();
-
-  /**
-   * @brief Stop auto-sequence mode
-   * @return true on success, false on I2C error
-   */
   bool stopSequence();
-
-  /**
-   * @brief Read next conversion result from sequence
-   * @param channel Pointer to store channel ID (optional, can be nullptr)
-   * @return 12-bit ADC value (0-4095), or 0xFFFF on error
-   */
   uint16_t readSequenceResult(uint8_t* channel = nullptr);
 
   // -------------------------------------------------------------------------
   // Oversampling Configuration (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Set oversampling ratio
-   * @param osr Oversampling ratio (see ads7128_osr_t)
-   * @return true on success, false on I2C error
-   */
   bool setOversampling(ads7128_osr_t osr);
-
-  /**
-   * @brief Get current oversampling ratio
-   * @return Current oversampling ratio setting
-   */
   ads7128_osr_t getOversampling();
 
   // -------------------------------------------------------------------------
   // Statistics Functions (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Enable or disable statistics module (min/max/recent tracking)
-   * @param enable true to enable, false to disable
-   * @return true on success, false on I2C error
-   */
   bool enableStatistics(bool enable);
   bool getStatisticsEnabled();
-
-  /**
-   * @brief Get maximum recorded value for a channel
-   * @param channel Channel number (0-7)
-   * @return 12-bit max value, or 0xFFFF on error
-   */
   uint16_t getMax(uint8_t channel);
-
-  /**
-   * @brief Get minimum recorded value for a channel
-   * @param channel Channel number (0-7)
-   * @return 12-bit min value, or 0xFFFF on error
-   */
   uint16_t getMin(uint8_t channel);
-
-  /**
-   * @brief Get most recent conversion value for a channel
-   * @param channel Channel number (0-7)
-   * @return 12-bit recent value, or 0xFFFF on error
-   */
   uint16_t getRecent(uint8_t channel);
-
-  /**
-   * @brief Reset all statistics (min/max/recent)
-   * @return true on success, false on I2C error
-   */
   bool resetStatistics();
 
   // -------------------------------------------------------------------------
   // Digital Window Comparator (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Enable or disable digital window comparator
-   * @param enable true to enable, false to disable
-   * @return true on success, false on I2C error
-   */
   bool enableDWC(bool enable);
   bool getDWCEnabled();
-
-  /**
-   * @brief Set high threshold for a channel
-   * @param channel Channel number (0-7)
-   * @param threshold 12-bit threshold value
-   * @return true on success, false on I2C error
-   */
   bool setHighThreshold(uint8_t channel, uint16_t threshold);
-
-  /**
-   * @brief Set low threshold for a channel
-   * @param channel Channel number (0-7)
-   * @param threshold 12-bit threshold value
-   * @return true on success, false on I2C error
-   */
   bool setLowThreshold(uint8_t channel, uint16_t threshold);
-
-  /**
-   * @brief Set hysteresis for a channel
-   * @param channel Channel number (0-7)
-   * @param hysteresis 4-bit hysteresis value (0-15)
-   * @return true on success, false on I2C error
-   */
   bool setHysteresis(uint8_t channel, uint8_t hysteresis);
-
-  /**
-   * @brief Set event count for a channel (consecutive samples before alert)
-   * @param channel Channel number (0-7)
-   * @param count 4-bit event count (0-15, alert after count+1 samples)
-   * @return true on success, false on I2C error
-   */
   bool setEventCount(uint8_t channel, uint8_t count);
-
-  /**
-   * @brief Get event flags for all channels
-   * @return 8-bit event flags (bit per channel)
-   */
   uint8_t getEventFlags();
-
-  /**
-   * @brief Get high threshold event flags
-   * @return 8-bit event flags (bit per channel)
-   */
   uint8_t getEventHighFlags();
-
-  /**
-   * @brief Get low threshold event flags
-   * @return 8-bit event flags (bit per channel)
-   */
   uint8_t getEventLowFlags();
-
-  /**
-   * @brief Clear all event flags
-   * @return true on success, false on I2C error
-   */
   bool clearEventFlags();
 
   // -------------------------------------------------------------------------
   // ALERT Pin Configuration (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Configure ALERT pin output mode and logic
-   * @param pushPull true for push-pull, false for open-drain
-   * @param logic 0=active low, 1=active high, 2=pulsed low, 3=pulsed high
-   * @return true on success, false on I2C error
-   */
   bool configureAlert(bool pushPull, uint8_t logic);
-
-  /**
-   * @brief Set which channels trigger ALERT pin
-   * @param channelMask Bitmask of channels (bit 0 = CH0, etc.)
-   * @return true on success, false on I2C error
-   */
   bool setAlertChannels(uint8_t channelMask);
 
   // -------------------------------------------------------------------------
   // Sampling Rate (Phase 2)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Set sampling rate for autonomous mode
-   * @param slowOsc true for low-power oscillator, false for high-speed
-   * @param divider Clock divider (0-7)
-   * @return true on success, false on I2C error
-   */
   bool setSamplingRate(bool slowOsc, uint8_t divider);
 
   // -------------------------------------------------------------------------
   // Zero-Crossing Detection (ZCD)
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Set which analog channel the ZCD module monitors
-   * @param channel Channel number (0-7)
-   * @return true on success, false on I2C error or invalid channel
-   */
   bool setZCDChannel(uint8_t channel);
-
-  /**
-   * @brief Configure ZCD blanking (transient rejection)
-   * @param count Blanking count (0-127, conversions to skip after ZCD event)
-   * @param multiply true = count x8, false = count x1
-   * @return true on success, false on I2C error
-   */
   bool setZCDBlanking(uint8_t count, bool multiply = false);
-
-  /**
-   * @brief Map ZCD output to a GPO pin
-   * @param gpoChannel GPO channel (0-7, must be configured as digital output)
-   * @param mode 0=low, 1=high, 2=ZCD signal, 3=inverted ZCD
-   * @return true on success, false on I2C error or invalid channel
-   */
   bool setZCDOutput(uint8_t gpoChannel, uint8_t mode);
-
-  /**
-   * @brief Enable or disable ZCD-to-GPO updates for a channel
-   * @param gpoChannel GPO channel (0-7)
-   * @param enable true to enable ZCD updates on this GPO
-   * @return true on success, false on I2C error
-   */
   bool enableZCDOutput(uint8_t gpoChannel, bool enable);
   bool getZCDOutputEnabled(uint8_t gpoChannel);
 
@@ -502,45 +293,12 @@ class Adafruit_ADS7128 {
   // RMS Functions
   // -------------------------------------------------------------------------
 
-  /**
-   * @brief Enable or disable RMS computation module
-   * @param enable true to enable (clears result and starts computation)
-   * @return true on success, false on I2C error
-   */
   bool enableRMS(bool enable);
   bool getRMSEnabled();
-
-  /**
-   * @brief Set which channel the RMS module monitors
-   * @param channel Channel number (0-7)
-   * @return true on success, false on I2C error or invalid channel
-   */
   bool setRMSChannel(uint8_t channel);
-
-  /**
-   * @brief Set number of samples for RMS computation
-   * @param setting 0=1024, 1=4096, 2=16384, 3=65536 samples
-   * @return true on success, false on I2C error or invalid setting
-   */
   bool setRMSSamples(uint8_t setting);
-
-  /**
-   * @brief Enable or disable DC subtraction for RMS
-   * @param enable true to subtract DC component before RMS calculation
-   * @return true on success, false on I2C error
-   */
   bool setRMSDCSub(bool enable);
-
-  /**
-   * @brief Read the 16-bit RMS result
-   * @return 16-bit RMS value, or 0xFFFF on error
-   */
   uint16_t getRMS();
-
-  /**
-   * @brief Check if RMS computation is complete
-   * @return true if done (clears the flag), false if not done or error
-   */
   bool isRMSDone();
 
  private:
