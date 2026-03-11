@@ -10,7 +10,7 @@
 #include <Wire.h>
 
 // Set this to your AVDD voltage (3.3 or 5.0)
-#define VREF 3.3
+#define ADS_VREF 3.3
 
 Adafruit_ADS7128 adc;
 
@@ -42,7 +42,7 @@ void loop() {
 
   for (uint8_t ch = 0; ch < 8; ch++) {
     uint16_t raw = adc.analogRead(ch);
-    float voltage = adc.analogReadVoltage(ch, VREF);
+    float voltage = adc.analogReadVoltage(ch, ADS_VREF);
 
     Serial.print(F("   "));
     Serial.print(ch);
