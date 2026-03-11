@@ -8,5 +8,6 @@ var searchData=
   ['getmin',['getMin',['../class_adafruit___a_d_s7128.html#a16dda9771d90048b48a8ca52435674a1',1,'Adafruit_ADS7128']]],
   ['getoversampling',['getOversampling',['../class_adafruit___a_d_s7128.html#a635166a09885516873cf9f97fda01379',1,'Adafruit_ADS7128']]],
   ['getrecent',['getRecent',['../class_adafruit___a_d_s7128.html#ad54e40d87e3b23a4bac9932b998a0772',1,'Adafruit_ADS7128']]],
-  ['getrms',['getRMS',['../class_adafruit___a_d_s7128.html#a991cb9c45ce041a583895d041b6e335d',1,'Adafruit_ADS7128']]]
+  ['getrms',['getRMS',['../class_adafruit___a_d_s7128.html#a991cb9c45ce041a583895d041b6e335d',1,'Adafruit_ADS7128']]],
+  ['getstatisticsenabled',['getStatisticsEnabled',['../class_adafruit___a_d_s7128.html#a65f920b6ce8350af7f0763e48fb028e6',1,'Adafruit_ADS7128']]]
 ];

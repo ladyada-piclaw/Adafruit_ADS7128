@@ -121,6 +121,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8dca6608b925972505a24dd2d0723dbc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a8dca6608b925972505a24dd2d0723dbc">enableStatistics</a> (bool enable)</td></tr>
 <tr class="memdesc:a8dca6608b925972505a24dd2d0723dbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable statistics module (min/max/recent tracking)  <a href="#a8dca6608b925972505a24dd2d0723dbc">More...</a><br /></td></tr>
 <tr class="separator:a8dca6608b925972505a24dd2d0723dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65f920b6ce8350af7f0763e48fb028e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a65f920b6ce8350af7f0763e48fb028e6">getStatisticsEnabled</a> ()</td></tr>
+<tr class="memdesc:a65f920b6ce8350af7f0763e48fb028e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if statistics tracking is enabled.  <a href="#a65f920b6ce8350af7f0763e48fb028e6">More...</a><br /></td></tr>
+<tr class="separator:a65f920b6ce8350af7f0763e48fb028e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29babe3c6b24553fd1148df5a1d64006"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a29babe3c6b24553fd1148df5a1d64006">getMax</a> (uint8_t channel)</td></tr>
 <tr class="memdesc:a29babe3c6b24553fd1148df5a1d64006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum recorded value for a channel.  <a href="#a29babe3c6b24553fd1148df5a1d64006">More...</a><br /></td></tr>
 <tr class="separator:a29babe3c6b24553fd1148df5a1d64006"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -642,6 +645,26 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error </dd></dl>
+
+</div>
+</div>
+<a id="a65f920b6ce8350af7f0763e48fb028e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65f920b6ce8350af7f0763e48fb028e6">&#9670;&nbsp;</a></span>getStatisticsEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getStatisticsEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if statistics tracking is enabled. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if statistics (min/max/recent) tracking is active </dd></dl>
 
 </div>
 </div>
