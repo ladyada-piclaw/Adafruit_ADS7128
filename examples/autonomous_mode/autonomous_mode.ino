@@ -7,7 +7,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 adc;
 
@@ -19,8 +18,6 @@ void setup() {
 
   Serial.println(F("ADS7128 Autonomous Mode Test"));
   Serial.println(F("============================"));
-
-  Wire.begin();
 
   if (!adc.begin()) {
     Serial.println(F("Failed to find ADS7128!"));

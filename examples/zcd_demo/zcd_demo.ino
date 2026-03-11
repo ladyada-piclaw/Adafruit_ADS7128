@@ -13,7 +13,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 #define ADS_VREF 3.3
 #define PWM_PIN 10
@@ -27,8 +26,6 @@ void setup() {
 
   Serial.println(F("ADS7128 Zero-Crossing Detection Demo"));
   Serial.println(F("====================================="));
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("Failed to find ADS7128!"));

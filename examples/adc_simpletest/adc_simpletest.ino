@@ -7,7 +7,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 // Set this to your AVDD voltage (3.3 or 5.0)
 #define ADS_VREF 3.3
@@ -22,8 +21,6 @@ void setup() {
 
   Serial.println(F("ADS7128 ADC Simple Test"));
   Serial.println(F("======================="));
-
-  Wire.begin();
 
   if (!adc.begin()) {
     Serial.println(F("Failed to find ADS7128!"));

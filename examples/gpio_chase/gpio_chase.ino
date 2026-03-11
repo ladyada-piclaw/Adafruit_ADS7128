@@ -7,7 +7,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -19,8 +18,6 @@ void setup() {
 
   Serial.println(F("ADS7128 GPIO LED Chase"));
   Serial.println(F("======================"));
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("Failed to find ADS7128!"));
