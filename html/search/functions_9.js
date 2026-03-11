@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['setalertchannels',['setAlertChannels',['../class_adafruit___a_d_s7128.html#a1418177d303ae25774ee15e6b3d5aa48',1,'Adafruit_ADS7128']]],
+  ['seteventcount',['setEventCount',['../class_adafruit___a_d_s7128.html#a15f171de2e10874ed0c476515887d5cb',1,'Adafruit_ADS7128']]],
+  ['sethighthreshold',['setHighThreshold',['../class_adafruit___a_d_s7128.html#a73d7b92d7f7f33b82b56cd3a1d0117b5',1,'Adafruit_ADS7128']]],
+  ['sethysteresis',['setHysteresis',['../class_adafruit___a_d_s7128.html#a09cffcd8478ff4f34ac6355bd2175fdb',1,'Adafruit_ADS7128']]],
+  ['setlowthreshold',['setLowThreshold',['../class_adafruit___a_d_s7128.html#a2eb6bb54431255470a25a1db8847d7db',1,'Adafruit_ADS7128']]],
+  ['setoversampling',['setOversampling',['../class_adafruit___a_d_s7128.html#a2370aa61186a767c098dbfed0ba2e69e',1,'Adafruit_ADS7128']]],
+  ['setrmschannel',['setRMSChannel',['../class_adafruit___a_d_s7128.html#a43701253b470da8bb276bb866c6f7af6',1,'Adafruit_ADS7128']]],
+  ['setrmsdcsub',['setRMSDCSub',['../class_adafruit___a_d_s7128.html#ac26b82885ff5072d43e01c9ecd5f94d3',1,'Adafruit_ADS7128']]],
+  ['setrmssamples',['setRMSSamples',['../class_adafruit___a_d_s7128.html#aad67bdce161d892320d4afd721ef948a',1,'Adafruit_ADS7128']]],
+  ['setsamplingrate',['setSamplingRate',['../class_adafruit___a_d_s7128.html#ab5ed653a13ef2ec92dd77fa666a01034',1,'Adafruit_ADS7128']]],
+  ['setsequencechannels',['setSequenceChannels',['../class_adafruit___a_d_s7128.html#a2efda509c230d4d146ff7d3fce1c05a8',1,'Adafruit_ADS7128']]],
+  ['setzcdblanking',['setZCDBlanking',['../class_adafruit___a_d_s7128.html#abad03882f500231c63ce964639abcf75',1,'Adafruit_ADS7128']]],
+  ['setzcdchannel',['setZCDChannel',['../class_adafruit___a_d_s7128.html#ac023bfbe472f564aa02d0d6a1d6d6e0a',1,'Adafruit_ADS7128']]],
+  ['setzcdoutput',['setZCDOutput',['../class_adafruit___a_d_s7128.html#af1b4f21a0141777a7b1fc8bff375f09e',1,'Adafruit_ADS7128']]],
+  ['startsequence',['startSequence',['../class_adafruit___a_d_s7128.html#aef97fa5646a4040e7bbca5ffe4fbbb69',1,'Adafruit_ADS7128']]],
+  ['stopsequence',['stopSequence',['../class_adafruit___a_d_s7128.html#afa41ff450cd1bd604fcd21a4e5ef713e',1,'Adafruit_ADS7128']]]
+];
