@@ -88,6 +88,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af29f8fb6976bd0721b93d2fd2903a304"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#af29f8fb6976bd0721b93d2fd2903a304">enableCRC</a> (bool enable)</td></tr>
 <tr class="memdesc:af29f8fb6976bd0721b93d2fd2903a304"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable CRC on I2C interface.  <a href="#af29f8fb6976bd0721b93d2fd2903a304">More...</a><br /></td></tr>
 <tr class="separator:af29f8fb6976bd0721b93d2fd2903a304"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a33755344e1fea7404ce4337b3ae4a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a4a33755344e1fea7404ce4337b3ae4a3">getCRCEnabled</a> ()</td></tr>
+<tr class="memdesc:a4a33755344e1fea7404ce4337b3ae4a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if CRC is enabled.  <a href="#a4a33755344e1fea7404ce4337b3ae4a3">More...</a><br /></td></tr>
+<tr class="separator:a4a33755344e1fea7404ce4337b3ae4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07e3daeaa8d7e5fdecf462428aad4a73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a07e3daeaa8d7e5fdecf462428aad4a73">getCRCError</a> ()</td></tr>
 <tr class="memdesc:a07e3daeaa8d7e5fdecf462428aad4a73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if CRC error detected.  <a href="#a07e3daeaa8d7e5fdecf462428aad4a73">More...</a><br /></td></tr>
 <tr class="separator:a07e3daeaa8d7e5fdecf462428aad4a73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,6 +142,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4a1784308bb852830601032a4cdf33f1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a4a1784308bb852830601032a4cdf33f1">enableDWC</a> (bool enable)</td></tr>
 <tr class="memdesc:a4a1784308bb852830601032a4cdf33f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable digital window comparator.  <a href="#a4a1784308bb852830601032a4cdf33f1">More...</a><br /></td></tr>
 <tr class="separator:a4a1784308bb852830601032a4cdf33f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb1e5c9610471361e4f5d6943f870a03"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#aeb1e5c9610471361e4f5d6943f870a03">getDWCEnabled</a> ()</td></tr>
+<tr class="memdesc:aeb1e5c9610471361e4f5d6943f870a03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the digital window comparator is enabled.  <a href="#aeb1e5c9610471361e4f5d6943f870a03">More...</a><br /></td></tr>
+<tr class="separator:aeb1e5c9610471361e4f5d6943f870a03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d7b92d7f7f33b82b56cd3a1d0117b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a73d7b92d7f7f33b82b56cd3a1d0117b5">setHighThreshold</a> (uint8_t channel, uint16_t threshold)</td></tr>
 <tr class="memdesc:a73d7b92d7f7f33b82b56cd3a1d0117b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set high threshold for a channel.  <a href="#a73d7b92d7f7f33b82b56cd3a1d0117b5">More...</a><br /></td></tr>
 <tr class="separator:a73d7b92d7f7f33b82b56cd3a1d0117b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,9 +190,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abfc6da18c9e8b5c3f1f00b0e03994f4e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#abfc6da18c9e8b5c3f1f00b0e03994f4e">enableZCDOutput</a> (uint8_t gpoChannel, bool enable)</td></tr>
 <tr class="memdesc:abfc6da18c9e8b5c3f1f00b0e03994f4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable ZCD-to-GPO updates for a channel.  <a href="#abfc6da18c9e8b5c3f1f00b0e03994f4e">More...</a><br /></td></tr>
 <tr class="separator:abfc6da18c9e8b5c3f1f00b0e03994f4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a785cac5c0e4a1311f0ed0336b664be81"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a785cac5c0e4a1311f0ed0336b664be81">getZCDOutputEnabled</a> (uint8_t gpoChannel)</td></tr>
+<tr class="memdesc:a785cac5c0e4a1311f0ed0336b664be81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if ZCD output is enabled for a specific GPO channel.  <a href="#a785cac5c0e4a1311f0ed0336b664be81">More...</a><br /></td></tr>
+<tr class="separator:a785cac5c0e4a1311f0ed0336b664be81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1aed6f3be4f0c0a3cf11f4d2745d3e3d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a1aed6f3be4f0c0a3cf11f4d2745d3e3d">enableRMS</a> (bool enable)</td></tr>
 <tr class="memdesc:a1aed6f3be4f0c0a3cf11f4d2745d3e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable RMS computation module.  <a href="#a1aed6f3be4f0c0a3cf11f4d2745d3e3d">More...</a><br /></td></tr>
 <tr class="separator:a1aed6f3be4f0c0a3cf11f4d2745d3e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7261e40abd74a47ce1fa09b4557a0cb4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a7261e40abd74a47ce1fa09b4557a0cb4">getRMSEnabled</a> ()</td></tr>
+<tr class="memdesc:a7261e40abd74a47ce1fa09b4557a0cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if RMS computation is enabled.  <a href="#a7261e40abd74a47ce1fa09b4557a0cb4">More...</a><br /></td></tr>
+<tr class="separator:a7261e40abd74a47ce1fa09b4557a0cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43701253b470da8bb276bb866c6f7af6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a43701253b470da8bb276bb866c6f7af6">setRMSChannel</a> (uint8_t channel)</td></tr>
 <tr class="memdesc:a43701253b470da8bb276bb866c6f7af6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set which channel the RMS module monitors.  <a href="#a43701253b470da8bb276bb866c6f7af6">More...</a><br /></td></tr>
 <tr class="separator:a43701253b470da8bb276bb866c6f7af6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -372,6 +384,26 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error </dd></dl>
+
+</div>
+</div>
+<a id="a4a33755344e1fea7404ce4337b3ae4a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a33755344e1fea7404ce4337b3ae4a3">&#9670;&nbsp;</a></span>getCRCEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getCRCEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if CRC is enabled. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if CRC checking is active </dd></dl>
 
 </div>
 </div>
@@ -793,6 +825,26 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error </dd></dl>
+
+</div>
+</div>
+<a id="aeb1e5c9610471361e4f5d6943f870a03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb1e5c9610471361e4f5d6943f870a03">&#9670;&nbsp;</a></span>getDWCEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getDWCEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if the digital window comparator is enabled. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if DWC is active </dd></dl>
 
 </div>
 </div>
@@ -1272,6 +1324,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a785cac5c0e4a1311f0ed0336b664be81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a785cac5c0e4a1311f0ed0336b664be81">&#9670;&nbsp;</a></span>getZCDOutputEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getZCDOutputEnabled </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>gpoChannel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if ZCD output is enabled for a specific GPO channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">gpoChannel</td><td>GPO channel number (0-7) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if ZCD output is enabled for that channel </dd></dl>
+
+</div>
+</div>
 <a id="a1aed6f3be4f0c0a3cf11f4d2745d3e3d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1aed6f3be4f0c0a3cf11f4d2745d3e3d">&#9670;&nbsp;</a></span>enableRMS()</h2>
 
@@ -1305,6 +1384,26 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error </dd></dl>
+
+</div>
+</div>
+<a id="a7261e40abd74a47ce1fa09b4557a0cb4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7261e40abd74a47ce1fa09b4557a0cb4">&#9670;&nbsp;</a></span>getRMSEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getRMSEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if RMS computation is enabled. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if RMS module is active </dd></dl>
 
 </div>
 </div>
