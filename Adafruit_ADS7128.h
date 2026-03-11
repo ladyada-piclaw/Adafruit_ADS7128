@@ -15,99 +15,147 @@
 #include <Adafruit_I2CDevice.h>
 #include <Arduino.h>
 
-// Default I2C address (ADDR pin to GND via ~10kΩ)
+/** Default I2C address (ADDR pin to GND via ~10k ohm) */
 #define ADS7128_DEFAULT_ADDR 0x10
 
-// Opcodes (NOT standard I2C register access!)
+/** Opcode for single register read */
 #define ADS7128_OP_SINGLE_READ 0x10
+/** Opcode for single register write */
 #define ADS7128_OP_SINGLE_WRITE 0x08
+/** Opcode for setting bits in a register */
 #define ADS7128_OP_SET_BIT 0x18
+/** Opcode for clearing bits in a register */
 #define ADS7128_OP_CLEAR_BIT 0x20
+/** Opcode for block read of consecutive registers */
 #define ADS7128_OP_BLOCK_READ 0x30
+/** Opcode for block write to consecutive registers */
 #define ADS7128_OP_BLOCK_WRITE 0x28
 
-// System and Configuration Registers
+/** System status register (reset, CRC errors, sequence status) */
 #define ADS7128_REG_SYSTEM_STATUS 0x00
+/** General configuration register (reset, cal, stats, CRC, RMS enables) */
 #define ADS7128_REG_GENERAL_CFG 0x01
+/** Data configuration register (channel ID append, data format) */
 #define ADS7128_REG_DATA_CFG 0x02
+/** Oversampling configuration register */
 #define ADS7128_REG_OSR_CFG 0x03
+/** Operating mode configuration register (manual vs autonomous) */
 #define ADS7128_REG_OPMODE_CFG 0x04
 
-// GPIO Configuration Registers
+/** Pin configuration register (analog vs digital per channel) */
 #define ADS7128_REG_PIN_CFG 0x05
+/** GPIO configuration register (input vs output direction) */
 #define ADS7128_REG_GPIO_CFG 0x07
+/** GPO drive configuration register (push-pull vs open-drain) */
 #define ADS7128_REG_GPO_DRIVE_CFG 0x09
+/** GPO output value register */
 #define ADS7128_REG_GPO_VALUE 0x0B
+/** GPI input value register */
 #define ADS7128_REG_GPI_VALUE 0x0D
 
-// Sequencer and Channel Selection
+/** ZCD blanking configuration register (transient rejection) */
 #define ADS7128_REG_ZCD_BLANKING_CFG 0x0F
+/** Sequence configuration register (mode, start/stop) */
 #define ADS7128_REG_SEQUENCE_CFG 0x10
+/** Channel selection register for manual mode */
 #define ADS7128_REG_CHANNEL_SEL 0x11
+/** Auto-sequence channel selection bitmask register */
 #define ADS7128_REG_AUTO_SEQ_CH_SEL 0x12
 
-// Alert and Event Registers
+/** Alert channel selection register */
 #define ADS7128_REG_ALERT_CH_SEL 0x14
+/** Alert mapping register (event to alert pin routing) */
 #define ADS7128_REG_ALERT_MAP 0x16
+/** Alert pin configuration register (polarity, drive) */
 #define ADS7128_REG_ALERT_PIN_CFG 0x17
+/** Event flag register (combined high/low threshold events) */
 #define ADS7128_REG_EVENT_FLAG 0x18
+/** High threshold event flags register */
 #define ADS7128_REG_EVENT_HIGH_FLAG 0x1A
+/** Low threshold event flags register */
 #define ADS7128_REG_EVENT_LOW_FLAG 0x1C
+/** Event region register (inside/outside window tracking) */
 #define ADS7128_REG_EVENT_RGN 0x1E
 
-// Per-Channel Threshold Registers (base addresses)
+/** Hysteresis register base address for CH0 (add 4*ch for other channels) */
 #define ADS7128_REG_HYSTERESIS_CH0 0x20
+/** High threshold register base address for CH0 (add 4*ch for other channels)
+ */
 #define ADS7128_REG_HIGH_TH_CH0 0x21
+/** Event count register base address for CH0 (add 4*ch for other channels) */
 #define ADS7128_REG_EVENT_COUNT_CH0 0x22
+/** Low threshold register base address for CH0 (add 4*ch for other channels) */
 #define ADS7128_REG_LOW_TH_CH0 0x23
 
-// Statistics Registers (base addresses)
+/** Statistics max value LSB register base address for CH0 */
 #define ADS7128_REG_MAX_LSB_CH0 0x60
+/** Statistics min value LSB register base address for CH0 */
 #define ADS7128_REG_MIN_LSB_CH0 0x80
+/** Recent conversion LSB register base address for CH0 */
 #define ADS7128_REG_RECENT_LSB_CH0 0xA0
 
-// RMS Registers
+/** RMS configuration register (channel, samples, DC subtraction) */
 #define ADS7128_REG_RMS_CFG 0xC0
+/** RMS result LSB register */
 #define ADS7128_REG_RMS_LSB 0xC1
+/** RMS result MSB register */
 #define ADS7128_REG_RMS_MSB 0xC2
 
-// GPO Trigger Event Registers (base address)
+/** GPO0 trigger event selection register base address */
 #define ADS7128_REG_GPO0_TRIG_EVENT_SEL 0xC3
 
-// ZCD and Trigger Registers
+/** ZCD output mapping register for channels 0-3 */
 #define ADS7128_REG_GPO_VALUE_ZCD_CFG_CH0_CH3 0xE3
+/** ZCD output mapping register for channels 4-7 */
 #define ADS7128_REG_GPO_VALUE_ZCD_CFG_CH4_CH7 0xE4
+/** ZCD to GPO update enable register */
 #define ADS7128_REG_GPO_ZCD_UPDATE_EN 0xE7
+/** GPO trigger configuration register */
 #define ADS7128_REG_GPO_TRIGGER_CFG 0xE9
+/** GPO trigger output value register */
 #define ADS7128_REG_GPO_VALUE_TRIG 0xEB
 
-// SYSTEM_STATUS bits
+/** Brown-out reset detected flag bit */
 #define ADS7128_BIT_BOR 0x01
+/** CRC error on input data flag bit */
 #define ADS7128_BIT_CRC_ERR_IN 0x02
+/** CRC error on fuse data flag bit */
 #define ADS7128_BIT_CRC_ERR_FUSE 0x04
+/** Oversampling computation done flag bit */
 #define ADS7128_BIT_OSR_DONE 0x08
+/** RMS computation done flag bit */
 #define ADS7128_BIT_RMS_DONE 0x10
+/** I2C high-speed mode status bit */
 #define ADS7128_BIT_I2C_SPEED 0x20
+/** Sequence active status bit */
 #define ADS7128_BIT_SEQ_STATUS 0x40
 
-// GENERAL_CFG bits
+/** Software reset bit */
 #define ADS7128_BIT_RST 0x01
+/** Calibration trigger bit */
 #define ADS7128_BIT_CAL 0x02
+/** Channel statistics reset bit */
 #define ADS7128_BIT_CH_RST 0x04
+/** Conversion start trigger bit */
 #define ADS7128_BIT_CNVST 0x08
+/** Digital window comparator enable bit */
 #define ADS7128_BIT_DWC_EN 0x10
+/** Statistics module enable bit */
 #define ADS7128_BIT_STATS_EN 0x20
+/** CRC enable bit */
 #define ADS7128_BIT_CRC_EN 0x40
+/** RMS module enable bit */
 #define ADS7128_BIT_RMS_EN 0x80
 
-// SEQUENCE_CFG bits
+/** Sequence start bit */
 #define ADS7128_BIT_SEQ_START 0x10
+/** Sequence mode bit (0=manual, 1=auto) */
 #define ADS7128_BIT_SEQ_MODE 0x01
 
-// OPMODE_CFG bits
+/** Conversion mode bit (0=manual, 1=autonomous) */
 #define ADS7128_BIT_CONV_MODE 0x20
 
-// DATA_CFG bits
+/** Append channel ID to conversion data bit */
 #define ADS7128_APPEND_CHID 0x10
 
 /**
