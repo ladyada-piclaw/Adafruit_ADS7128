@@ -9,7 +9,7 @@
  * the state of channel 0.
  *
  * Hardware:
- * - ADS7128 at address 0x11 (ADDR to GND via ~10kΩ)
+ * - ADS7128 at default address (ADDR to GND via ~10kΩ)
  * - SDA/SCL to A4/A5 on Metro Mini
  * - 10K resistor between CH0 and CH1
  */

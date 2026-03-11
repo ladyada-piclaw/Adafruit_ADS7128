@@ -5,7 +5,7 @@
  * Tests DWC high/low threshold alerts with interrupt detection on Metro D3.
  *
  * Hardware setup:
- * - ADS7128 at 0x11, AVDD/DVDD = 5V
+ * - ADS7128 at 0x10, AVDD/DVDD = 5V
  * - CH0 configured as push-pull output
  * - CH1 configured as analog input
  * - A0—10K—A1—10K—...—A7 resistor chain
@@ -15,7 +15,6 @@
 #include <Adafruit_ADS7128.h>
 #include <Wire.h>
 
-#define ADS7128_ADDR 0x11
 #define ALERT_PIN 3
 
 Adafruit_ADS7128 ads;
@@ -38,8 +37,8 @@ void setup() {
 
   Wire.begin();
 
-  if (!ads.begin(ADS7128_ADDR)) {
-    Serial.println(F("ERROR: ADS7128 not found at 0x11!"));
+  if (!ads.begin()) {
+    Serial.println(F("ERROR: ADS7128 not found at 0x10!"));
     while (1)
       delay(10);
   }

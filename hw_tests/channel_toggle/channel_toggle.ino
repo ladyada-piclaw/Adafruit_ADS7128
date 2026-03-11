@@ -11,7 +11,6 @@
 
 Adafruit_ADS7128 ads;
 
-#define ADS7128_ADDR 0x11
 #define TEST_CHANNEL 0
 
 void setup() {
@@ -23,7 +22,7 @@ void setup() {
   Serial.println(F(" at ~50Hz (10ms HIGH / 10ms LOW)"));
 
   Wire.begin();
-  if (!ads.begin(ADS7128_ADDR)) {
+  if (!ads.begin()) {
     Serial.println(F("FAIL: begin"));
     while (1) delay(10);
   }

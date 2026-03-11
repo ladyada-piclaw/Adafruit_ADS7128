@@ -3,7 +3,7 @@
  * @brief ADS7128 Oversampling Test with PWM Signal
  *
  * Hardware setup:
- * - ADS7128 at I2C address 0x11
+ * - ADS7128 at default I2C address
  * - AVDD/DVDD = 5V
  * - Metro Mini pin 10 (Timer1 PWM, OC1B) connected to ADS7128 CH0
  *
@@ -18,7 +18,6 @@
 #include <Adafruit_ADS7128.h>
 #include <Wire.h>
 
-#define ADS7128_ADDR 0x11
 #define PWM_PIN 10
 #define NUM_SAMPLES 30
 #define VREF 5.0
@@ -67,7 +66,7 @@ void setup() {
 
   Wire.begin();
 
-  if (!ads.begin(ADS7128_ADDR)) {
+  if (!ads.begin()) {
     Serial.println(F("ERROR: Failed to initialize ADS7128!"));
     while (1) {
       delay(1000);
