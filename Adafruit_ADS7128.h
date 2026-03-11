@@ -446,6 +446,50 @@ public:
    */
   bool enableZCDOutput(uint8_t gpoChannel, bool enable);
 
+  // -------------------------------------------------------------------------
+  // RMS Functions
+  // -------------------------------------------------------------------------
+
+  /**
+   * @brief Enable or disable RMS computation module
+   * @param enable true to enable (clears result and starts computation)
+   * @return true on success, false on I2C error
+   */
+  bool enableRMS(bool enable);
+
+  /**
+   * @brief Set which channel the RMS module monitors
+   * @param channel Channel number (0-7)
+   * @return true on success, false on I2C error or invalid channel
+   */
+  bool setRMSChannel(uint8_t channel);
+
+  /**
+   * @brief Set number of samples for RMS computation
+   * @param setting 0=1024, 1=4096, 2=16384, 3=65536 samples
+   * @return true on success, false on I2C error or invalid setting
+   */
+  bool setRMSSamples(uint8_t setting);
+
+  /**
+   * @brief Enable or disable DC subtraction for RMS
+   * @param enable true to subtract DC component before RMS calculation
+   * @return true on success, false on I2C error
+   */
+  bool setRMSDCSub(bool enable);
+
+  /**
+   * @brief Read the 16-bit RMS result
+   * @return 16-bit RMS value, or 0xFFFF on error
+   */
+  uint16_t getRMS();
+
+  /**
+   * @brief Check if RMS computation is complete
+   * @return true if done (clears the flag), false if not done or error
+   */
+  bool isRMSDone();
+
 private:
   Adafruit_I2CDevice *_i2c;
   bool _crc_enabled;

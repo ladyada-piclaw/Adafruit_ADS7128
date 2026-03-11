@@ -507,6 +507,112 @@ bool Adafruit_ADS7128::enableZCDOutput(uint8_t gpoChannel, bool enable) {
 }
 
 // ---------------------------------------------------------------------------
+// RMS Functions
+// ---------------------------------------------------------------------------
+
+/**
+ * @brief Enable or disable the RMS computation module
+ *
+ * When enabled, the RMS module clears any previous result and begins
+ * a new computation using samples from autonomous conversion mode.
+ *
+ * @param enable true to enable RMS (starts new computation), false to disable
+ * @return true on success, false on I2C error
+ */
+bool Adafruit_ADS7128::enableRMS(bool enable) {
+  if (enable) {
+    return _setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_RMS_EN);
+  } else {
+    return _clearBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_RMS_EN);
+  }
+}
+
+/**
+ * @brief Set which analog channel the RMS module monitors
+ *
+ * The RMS module computes the root-mean-square value of samples from
+ * the specified channel during autonomous conversion mode.
+ *
+ * @param channel Channel number (0-7)
+ * @return true on success, false on I2C error or invalid channel
+ */
+bool Adafruit_ADS7128::setRMSChannel(uint8_t channel) {
+  if (channel > 7)
+    return false;
+  uint8_t reg = _readRegister(ADS7128_REG_RMS_CFG);
+  reg = (reg & 0x0F) | (channel << 4);
+  return _writeRegister(ADS7128_REG_RMS_CFG, reg);
+}
+
+/**
+ * @brief Set number of samples for RMS computation
+ *
+ * More samples give higher accuracy but take longer to compute.
+ * The RMS module must accumulate the specified number of samples
+ * before the result is valid.
+ *
+ * @param setting Sample count: 0=1024, 1=4096, 2=16384, 3=65536 samples
+ * @return true on success, false on I2C error or invalid setting
+ */
+bool Adafruit_ADS7128::setRMSSamples(uint8_t setting) {
+  if (setting > 3)
+    return false;
+  uint8_t reg = _readRegister(ADS7128_REG_RMS_CFG);
+  reg = (reg & 0xFC) | (setting & 0x03);
+  return _writeRegister(ADS7128_REG_RMS_CFG, reg);
+}
+
+/**
+ * @brief Enable or disable DC subtraction for RMS calculation
+ *
+ * When enabled, the DC component (average) is subtracted from samples
+ * before RMS calculation, giving the AC RMS value.
+ *
+ * @param enable true to subtract DC component, false for total RMS
+ * @return true on success, false on I2C error
+ */
+bool Adafruit_ADS7128::setRMSDCSub(bool enable) {
+  if (enable) {
+    return _setBits(ADS7128_REG_RMS_CFG, 0x04);
+  } else {
+    return _clearBits(ADS7128_REG_RMS_CFG, 0x04);
+  }
+}
+
+/**
+ * @brief Read the 16-bit RMS result
+ *
+ * Returns the RMS value computed over the configured number of samples.
+ * This is a full 16-bit value (not 12-bit like ADC readings).
+ * Check isRMSDone() before reading to ensure computation is complete.
+ *
+ * @return 16-bit RMS value, or 0xFFFF on I2C error
+ */
+uint16_t Adafruit_ADS7128::getRMS() {
+  uint8_t lsb = _readRegister(ADS7128_REG_RMS_LSB);
+  uint8_t msb = _readRegister(ADS7128_REG_RMS_MSB);
+  return ((uint16_t)msb << 8) | lsb;
+}
+
+/**
+ * @brief Check if RMS computation is complete
+ *
+ * Checks the RMS_DONE flag in SYSTEM_STATUS. If set, the flag is
+ * automatically cleared by writing 1 to it (W1C behavior).
+ *
+ * @return true if RMS computation is done, false if not done or error
+ */
+bool Adafruit_ADS7128::isRMSDone() {
+  uint8_t status = _readRegister(ADS7128_REG_SYSTEM_STATUS);
+  if (status & ADS7128_BIT_RMS_DONE) {
+    // Clear the flag by writing 1 to it
+    _setBits(ADS7128_REG_SYSTEM_STATUS, ADS7128_BIT_RMS_DONE);
+    return true;
+  }
+  return false;
+}
+
+// ---------------------------------------------------------------------------
 // Private Methods - Low-level register access
 // ---------------------------------------------------------------------------
 
