@@ -16,7 +16,6 @@
 
 Adafruit_ADS7128 ads;
 
-
 uint8_t testsPassed = 0;
 uint8_t testsFailed = 0;
 

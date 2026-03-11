@@ -26,7 +26,7 @@ Adafruit_ADS7128 ads;
 static uint16_t sineTable[SINEWAVE_SAMPLES];
 
 Adafruit_ZeroDMA dma;
-DmacDescriptor *dmacDesc;
+DmacDescriptor* dmacDesc;
 
 uint8_t testsRun = 0;
 uint8_t testsPassed = 0;
@@ -89,12 +89,12 @@ void setupDMADAC(uint16_t ccValue) {
   dma.setAction(DMA_TRIGGER_ACTON_BEAT);
   dma.allocate();
 
-  dmacDesc = dma.addDescriptor(sineTable,              // source
-                               (void *)&DAC->DATA.reg, // destination
-                               SINEWAVE_SAMPLES,       // count
-                               DMA_BEAT_SIZE_HWORD,    // 16-bit
-                               true,                   // source increment
-                               false                   // dest no increment
+  dmacDesc = dma.addDescriptor(sineTable,             // source
+                               (void*)&DAC->DATA.reg, // destination
+                               SINEWAVE_SAMPLES,      // count
+                               DMA_BEAT_SIZE_HWORD,   // 16-bit
+                               true,                  // source increment
+                               false                  // dest no increment
   );
   dmacDesc->BTCTRL.bit.BLOCKACT = DMA_BLOCK_ACTION_NOACT;
   // Make it loop: point descriptor back to itself
@@ -116,8 +116,8 @@ void stopDMADAC() {
 
 // Sample ZCD output and return stats
 // Returns total transitions, sets sawHigh/sawLow flags
-uint16_t sampleZCDOutput(uint16_t numSamples, uint16_t delayMs, bool *sawHigh,
-                         bool *sawLow) {
+uint16_t sampleZCDOutput(uint16_t numSamples, uint16_t delayMs, bool* sawHigh,
+                         bool* sawLow) {
   *sawHigh = false;
   *sawLow = false;
   uint16_t transitions = 0;

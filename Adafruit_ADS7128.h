@@ -142,7 +142,7 @@ typedef enum {
  * digital input, or digital output.
  */
 class Adafruit_ADS7128 {
-public:
+ public:
   Adafruit_ADS7128();
   ~Adafruit_ADS7128();
 
@@ -156,7 +156,7 @@ public:
    * @param wire Pointer to TwoWire instance
    * @return true on success, false on failure
    */
-  bool begin(uint8_t addr = ADS7128_DEFAULT_ADDR, TwoWire *wire = &Wire);
+  bool begin(uint8_t addr = ADS7128_DEFAULT_ADDR, TwoWire* wire = &Wire);
 
   // -------------------------------------------------------------------------
   // GPIO Functions (Phase 1)
@@ -256,7 +256,7 @@ public:
    * @param channel Pointer to store channel ID (optional, can be nullptr)
    * @return 12-bit ADC value (0-4095), or 0xFFFF on error
    */
-  uint16_t readSequenceResult(uint8_t *channel = nullptr);
+  uint16_t readSequenceResult(uint8_t* channel = nullptr);
 
   // -------------------------------------------------------------------------
   // Oversampling Configuration (Phase 2)
@@ -490,8 +490,8 @@ public:
    */
   bool isRMSDone();
 
-private:
-  Adafruit_I2CDevice *_i2c;
+ private:
+  Adafruit_I2CDevice* _i2c;
   bool _crc_enabled;
   bool _crc_error;
 
@@ -500,7 +500,7 @@ private:
   bool _writeRegister(uint8_t reg, uint8_t data);
   bool _setBits(uint8_t reg, uint8_t mask);
   bool _clearBits(uint8_t reg, uint8_t mask);
-  bool _readBlock(uint8_t startReg, uint8_t *buf, uint8_t len);
+  bool _readBlock(uint8_t startReg, uint8_t* buf, uint8_t len);
 
   // Helper to read 12-bit value from LSB/MSB register pair
   uint16_t _read12BitValue(uint8_t lsbReg);

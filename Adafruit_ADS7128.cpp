@@ -23,7 +23,7 @@ Adafruit_ADS7128::~Adafruit_ADS7128() {
   }
 }
 
-bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire *wire) {
+bool Adafruit_ADS7128::begin(uint8_t addr, TwoWire* wire) {
   if (_i2c) {
     delete _i2c;
   }
@@ -84,47 +84,47 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
   uint8_t mask = 1 << channel;
 
   switch (mode) {
-  case ADS7128_ANALOG:
-    if (!_clearBits(ADS7128_REG_PIN_CFG, mask)) {
-      return false;
-    }
-    break;
+    case ADS7128_ANALOG:
+      if (!_clearBits(ADS7128_REG_PIN_CFG, mask)) {
+        return false;
+      }
+      break;
 
-  case ADS7128_INPUT:
-    if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
-      return false;
-    }
-    if (!_clearBits(ADS7128_REG_GPIO_CFG, mask)) {
-      return false;
-    }
-    break;
+    case ADS7128_INPUT:
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+        return false;
+      }
+      if (!_clearBits(ADS7128_REG_GPIO_CFG, mask)) {
+        return false;
+      }
+      break;
 
-  case ADS7128_OUTPUT:
-    if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
-      return false;
-    }
-    if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
-      return false;
-    }
-    if (!_setBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
-      return false;
-    }
-    break;
+    case ADS7128_OUTPUT:
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+        return false;
+      }
+      if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
+        return false;
+      }
+      if (!_setBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
+        return false;
+      }
+      break;
 
-  case ADS7128_OUTPUT_OPENDRAIN:
-    if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
-      return false;
-    }
-    if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
-      return false;
-    }
-    if (!_clearBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
-      return false;
-    }
-    break;
+    case ADS7128_OUTPUT_OPENDRAIN:
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+        return false;
+      }
+      if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
+        return false;
+      }
+      if (!_clearBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
+        return false;
+      }
+      break;
 
-  default:
-    return false;
+    default:
+      return false;
   }
 
   return true;
@@ -256,7 +256,7 @@ bool Adafruit_ADS7128::stopSequence() {
   return _clearBits(ADS7128_REG_SEQUENCE_CFG, ADS7128_BIT_SEQ_START);
 }
 
-uint16_t Adafruit_ADS7128::readSequenceResult(uint8_t *channel) {
+uint16_t Adafruit_ADS7128::readSequenceResult(uint8_t* channel) {
   // Read 2 bytes of conversion data from device
   uint8_t cmd[2] = {ADS7128_OP_SINGLE_READ, 0x00};
   uint8_t response[2];
@@ -682,7 +682,7 @@ bool Adafruit_ADS7128::_clearBits(uint8_t reg, uint8_t mask) {
   }
 }
 
-bool Adafruit_ADS7128::_readBlock(uint8_t startReg, uint8_t *buf, uint8_t len) {
+bool Adafruit_ADS7128::_readBlock(uint8_t startReg, uint8_t* buf, uint8_t len) {
   if (_crc_enabled) {
     // Setup: [opcode][CRC][reg][CRC]
     uint8_t cmd[4] = {ADS7128_OP_BLOCK_READ, _crc8(ADS7128_OP_BLOCK_READ),

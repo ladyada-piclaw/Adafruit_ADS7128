@@ -25,7 +25,7 @@ Adafruit_ADS7128 ads;
 static uint16_t sineTable[SINEWAVE_SAMPLES];
 
 Adafruit_ZeroDMA dma;
-DmacDescriptor *dmacDesc;
+DmacDescriptor* dmacDesc;
 bool dmaInitialized = false;
 
 uint8_t testsRun = 0;
@@ -96,12 +96,12 @@ void setupDMADAC(uint16_t ccValue, bool fullScale) {
     dma.setAction(DMA_TRIGGER_ACTON_BEAT);
     dma.allocate();
 
-    dmacDesc = dma.addDescriptor(sineTable,              // source
-                                 (void *)&DAC->DATA.reg, // destination
-                                 SINEWAVE_SAMPLES,       // count
-                                 DMA_BEAT_SIZE_HWORD,    // 16-bit
-                                 true,                   // source increment
-                                 false                   // dest no increment
+    dmacDesc = dma.addDescriptor(sineTable,             // source
+                                 (void*)&DAC->DATA.reg, // destination
+                                 SINEWAVE_SAMPLES,      // count
+                                 DMA_BEAT_SIZE_HWORD,   // 16-bit
+                                 true,                  // source increment
+                                 false                  // dest no increment
     );
     dmacDesc->BTCTRL.bit.BLOCKACT = DMA_BLOCK_ACTION_NOACT;
     // Make it loop: point descriptor back to itself

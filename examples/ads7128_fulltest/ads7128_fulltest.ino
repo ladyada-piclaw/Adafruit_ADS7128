@@ -57,30 +57,30 @@ void setup() {
   //          ADS7128_OSR_128  (128x, lowest noise, slowest)
   Serial.print(F("OSR: "));
   switch (ads.getOversampling()) {
-  case ADS7128_OSR_NONE:
-    Serial.println(F("None"));
-    break;
-  case ADS7128_OSR_2:
-    Serial.println(F("2x"));
-    break;
-  case ADS7128_OSR_4:
-    Serial.println(F("4x"));
-    break;
-  case ADS7128_OSR_8:
-    Serial.println(F("8x"));
-    break;
-  case ADS7128_OSR_16:
-    Serial.println(F("16x"));
-    break;
-  case ADS7128_OSR_32:
-    Serial.println(F("32x"));
-    break;
-  case ADS7128_OSR_64:
-    Serial.println(F("64x"));
-    break;
-  case ADS7128_OSR_128:
-    Serial.println(F("128x"));
-    break;
+    case ADS7128_OSR_NONE:
+      Serial.println(F("None"));
+      break;
+    case ADS7128_OSR_2:
+      Serial.println(F("2x"));
+      break;
+    case ADS7128_OSR_4:
+      Serial.println(F("4x"));
+      break;
+    case ADS7128_OSR_8:
+      Serial.println(F("8x"));
+      break;
+    case ADS7128_OSR_16:
+      Serial.println(F("16x"));
+      break;
+    case ADS7128_OSR_32:
+      Serial.println(F("32x"));
+      break;
+    case ADS7128_OSR_64:
+      Serial.println(F("64x"));
+      break;
+    case ADS7128_OSR_128:
+      Serial.println(F("128x"));
+      break;
   }
 
   // === Statistics ===

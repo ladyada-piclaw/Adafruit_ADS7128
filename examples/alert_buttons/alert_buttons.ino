@@ -22,7 +22,9 @@ Adafruit_ADS7128 ads;
 
 volatile bool alertFired = false;
 
-void alertISR() { alertFired = true; }
+void alertISR() {
+  alertFired = true;
+}
 
 void setup() {
   Serial.begin(115200);

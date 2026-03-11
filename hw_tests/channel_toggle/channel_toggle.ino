@@ -15,7 +15,8 @@ Adafruit_ADS7128 ads;
 
 void setup() {
   Serial.begin(115200);
-  while (!Serial) delay(10);
+  while (!Serial)
+    delay(10);
 
   Serial.print(F("Toggling CH"));
   Serial.print(TEST_CHANNEL);
@@ -24,7 +25,8 @@ void setup() {
   Wire.begin();
   if (!ads.begin()) {
     Serial.println(F("FAIL: begin"));
-    while (1) delay(10);
+    while (1)
+      delay(10);
   }
 
   ads.pinMode(TEST_CHANNEL, ADS7128_OUTPUT);

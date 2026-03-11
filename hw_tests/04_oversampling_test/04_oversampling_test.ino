@@ -29,7 +29,7 @@ const ads7128_osr_t osrSettings[] = {
     ADS7128_OSR_NONE, ADS7128_OSR_2,  ADS7128_OSR_4,  ADS7128_OSR_8,
     ADS7128_OSR_16,   ADS7128_OSR_32, ADS7128_OSR_64, ADS7128_OSR_128};
 
-const char *osrNames[] = {"NONE", "2x  ", "4x  ", "8x  ",
+const char* osrNames[] = {"NONE", "2x  ", "4x  ", "8x  ",
                           "16x ", "32x ", "64x ", "128x"};
 
 const uint8_t numOSR = 8;
