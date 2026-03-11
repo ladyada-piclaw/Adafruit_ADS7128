@@ -70,7 +70,7 @@ void loop() {
   }
 
   Serial.println();
-  delay(2000);
+  delay(500);
 }
 
 void printPadded(uint16_t val) {

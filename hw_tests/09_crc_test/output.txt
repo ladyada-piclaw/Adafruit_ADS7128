@@ -1,0 +1,21 @@
+ADS7128 CRC Test
+------------------
+
+Test 1: GPIO round-trip with CRC
+  CH0=HIGH, CH1=HIGH ... PASS
+  CH0=LOW, CH1=LOW ... PASS
+
+Test 2: ADC read with CRC
+  CH3: 2333 (2.85 V) ... PASS
+  CRC errors: none ... PASS
+
+Test 3: Bulk reads with CRC (20 reads)
+  CRC errors after bulk: none ... PASS
+
+Test 4: CRC disable/re-enable
+  Without CRC: CH0=HIGH, CH1=HIGH ... PASS
+  Re-enabled CRC: CH0=LOW, CH1=LOW ... PASS
+
+================================
+RESULTS: 7/7 tests passed
+================================

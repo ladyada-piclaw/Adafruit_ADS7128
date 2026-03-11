@@ -76,5 +76,5 @@ void loop() {
   }
 
   Serial.println(F("\n-------------------\n"));
-  delay(2000);
+  delay(500);
 }
