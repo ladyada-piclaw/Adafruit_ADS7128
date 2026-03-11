@@ -3,11 +3,11 @@
  * @brief Hardware test: ADS7128 begin() and I2C communication verification
  *
  * Tests:
- * 1. I2C scan for device at 0x10
+ * 1. I2C scan for device at 0x11
  * 2. begin() initialization
  * 3. GPIO round-trip (CH0 output -> CH1 input through 10K resistor)
  *
- * Hardware: ADS7128 at 0x10, channels chained with 10K resistors
+ * Hardware: ADS7128 at 0x11, channels chained with 10K resistors
  */
 
 #include <Adafruit_ADS7128.h>
@@ -15,7 +15,7 @@
 
 Adafruit_ADS7128 ads;
 
-#define ADS7128_ADDR 0x10
+#define ADS7128_ADDR 0x11
 
 uint8_t tests_passed = 0;
 uint8_t tests_total = 0;
@@ -34,7 +34,7 @@ void setup() {
   // Test 1: I2C scan for device
   tests_total++;
   Serial.println(F(""));
-  Serial.println(F("Test 1: I2C device present at 0x10"));
+  Serial.println(F("Test 1: I2C device present at 0x11"));
   Wire.beginTransmission(ADS7128_ADDR);
   uint8_t error = Wire.endTransmission();
   if (error == 0) {

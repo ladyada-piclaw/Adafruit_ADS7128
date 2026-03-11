@@ -3,7 +3,7 @@
  * @brief ADS7128 statistics module test (min/max/recent tracking)
  *
  * Hardware setup:
- * - ADS7128 at I2C address 0x10
+ * - ADS7128 at I2C address 0x11
  * - AVDD/DVDD = 5V
  * - Channels A0–A7 chained with 10K resistors:
  *   A0—10K—A1—10K—A2—10K—A3—10K—A4—10K—A5—10K—A6—10K—A7
@@ -22,7 +22,7 @@
 
 Adafruit_ADS7128 ads;
 
-#define ADS7128_ADDR 0x10
+#define ADS7128_ADDR 0x11
 
 uint8_t testsPassed = 0;
 uint8_t totalTests = 3;

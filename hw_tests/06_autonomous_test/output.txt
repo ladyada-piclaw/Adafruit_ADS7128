@@ -1,0 +1,31 @@
+ADS7128 Autonomous Sequence Test
+----------------------------------
+CH0=HIGH, CH7=LOW (voltage divider on CH1-CH6)
+
+Test 1: Auto-sequence CH1-CH6
+  CH1: 4.09 V
+  CH2: 3.58 V
+  CH3: 2.93 V
+  CH4: 2.25 V
+  CH5: 1.54 V
+  CH6: 0.76 V
+  Monotonically decreasing: PASS
+  CH1 > 3.0V: PASS
+  CH6 < 2.0V: PASS
+
+Test 2: Sequence results match manual reads
+  CH1: seq=3347 manual=3347 diff=0 ... PASS
+  CH2: seq=2933 manual=2933 diff=0 ... PASS
+  CH3: seq=2403 manual=2403 diff=0 ... PASS
+  CH4: seq=1845 manual=1845 diff=0 ... PASS
+  CH5: seq=1263 manual=1263 diff=0 ... PASS
+  CH6: seq=626 manual=626 diff=0 ... PASS
+  All within tolerance: PASS
+
+Test 3: Selective sequence (CH2 + CH5 only)
+  CH2: 3.31 V  CH5: 1.65 V
+  CH2 > CH5: PASS
+
+================================
+RESULTS: 3/3 tests passed
+================================

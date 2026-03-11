@@ -23,7 +23,7 @@ void setup() {
 
   Wire.begin();
 
-  if (!adc.begin(0x10)) {
+  if (!adc.begin(0x11)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1) {
       delay(100);

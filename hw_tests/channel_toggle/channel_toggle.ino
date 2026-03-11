@@ -11,7 +11,7 @@
 
 Adafruit_ADS7128 ads;
 
-#define ADS7128_ADDR 0x10
+#define ADS7128_ADDR 0x11
 #define TEST_CHANNEL 0
 
 void setup() {

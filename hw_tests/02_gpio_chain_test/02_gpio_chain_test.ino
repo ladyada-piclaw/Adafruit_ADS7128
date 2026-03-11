@@ -3,7 +3,7 @@
  * @brief GPIO chain walk test for ADS7128 - tests all 8 channels as GPIO
  *
  * Hardware setup:
- * - ADS7128 at address 0x10
+ * - ADS7128 at address 0x11
  * - AVDD/DVDD = 5V
  * - Channels chained with 10K resistors: A0—10K—A1—10K—A2—...—A7
  *
@@ -16,7 +16,7 @@
 
 Adafruit_ADS7128 ads;
 
-#define ADS7128_ADDR 0x10
+#define ADS7128_ADDR 0x11
 
 uint8_t testsPassed = 0;
 uint8_t testsFailed = 0;
