@@ -38,7 +38,7 @@ void setup() {
   // true  = CRC-8 integrity check on all I2C transfers (slower but safe)
   // false = No CRC (default, faster)
   Serial.print(F("CRC: "));
-  Serial.println(ads.getCRCError() ? F("ERROR") : F("OK"));
+  Serial.println(ads.getCRCEnabled() ? F("Enabled") : F("Disabled"));
 
   // === Oversampling ===
   Serial.println(F("\n--- Oversampling ---"));
@@ -86,8 +86,8 @@ void setup() {
   ads.enableStatistics(true);
   // true  = Track min/max/recent for each channel
   // false = Disabled (default)
-  Serial.println(F("Statistics: Enabled"));
-  Serial.println(F("(Use getMin/getMax/getRecent after readings)"));
+  Serial.print(F("Statistics: "));
+  Serial.println(ads.getStatisticsEnabled() ? F("Enabled") : F("Disabled"));
 
   // === Pin Configuration ===
   // All channels default to analog input. Configure GPIOs here.
@@ -110,6 +110,20 @@ void setup() {
   // ads.enableDWC(true);
   // ads.setAlertChannels(0x01);     // CH0 only
   // ads.configureAlert(true, 0);    // Push-pull, active low
+  Serial.println(F("\n--- Digital Window Comparator ---"));
+  Serial.print(F("DWC: "));
+  Serial.println(ads.getDWCEnabled() ? F("Enabled") : F("Disabled"));
+
+  // === RMS (optional) ===
+  // Uncomment to enable RMS computation on a channel:
+  // ads.setRMSChannel(0);           // Monitor CH0
+  // ads.setRMSSamples(0);           // 0=1024, 1=4096, 2=16384, 3=65536
+  // ads.setRMSDCSub(false);         // true = subtract DC component
+  // ads.enableRMS(true);            // Start computation
+  // Poll ads.isRMSDone(), then read ads.getRMS()
+  Serial.println(F("\n--- RMS ---"));
+  Serial.print(F("RMS: "));
+  Serial.println(ads.getRMSEnabled() ? F("Enabled") : F("Disabled"));
 
   // === Continuous ADC Readings ===
   Serial.println(F("\n--- ADC Readings ---"));
