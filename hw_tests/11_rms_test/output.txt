@@ -1,0 +1,20 @@
+ADS7128 RMS Test (QT Py M0 DMA DAC)
+------------------------------------
+
+Test 1: RMS of sine wave
+  RMS value: 40068
+  Expected range 25000-60000: yes ... PASS
+
+Test 2: RMS with DC subtraction
+  Plain RMS: 40097
+  DC-sub RMS: 23044
+  DC-sub < plain: yes ... PASS
+
+Test 3: RMS amplitude scaling
+  Full amplitude RMS (DC-sub): 23039
+  Half amplitude RMS (DC-sub): 11534
+  Half RMS < Full RMS (with 20% margin): yes ... PASS
+
+================================
+RESULTS: 3/3 tests passed
+================================
