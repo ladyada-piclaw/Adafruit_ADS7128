@@ -19,7 +19,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -34,8 +33,6 @@ void setup() {
   Serial.println(F("ADS7128 ADC GPIO-Driven Voltage Divider Test"));
   Serial.println(F("----------------------------------------------"));
   Serial.println();
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: Failed to initialize ADS7128!"));

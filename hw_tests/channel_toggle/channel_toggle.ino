@@ -7,7 +7,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -22,7 +21,6 @@ void setup() {
   Serial.print(TEST_CHANNEL);
   Serial.println(F(" at ~50Hz (10ms HIGH / 10ms LOW)"));
 
-  Wire.begin();
   if (!ads.begin()) {
     Serial.println(F("FAIL: begin"));
     while (1)

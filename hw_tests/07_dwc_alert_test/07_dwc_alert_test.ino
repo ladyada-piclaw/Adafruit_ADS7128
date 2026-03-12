@@ -13,7 +13,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 #define ALERT_PIN 3
 
@@ -36,8 +35,6 @@ void setup() {
   // Configure ALERT pin with pullup and falling edge interrupt
   ::pinMode(ALERT_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(ALERT_PIN), alertISR, FALLING);
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: ADS7128 not found at 0x10!"));

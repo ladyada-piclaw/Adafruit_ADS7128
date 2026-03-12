@@ -15,7 +15,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -30,8 +29,6 @@ void setup() {
   Serial.println(F("ADS7128 CRC Test"));
   Serial.println(F("------------------"));
   Serial.println();
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: ADS7128 not found!"));

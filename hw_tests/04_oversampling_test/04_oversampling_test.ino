@@ -16,7 +16,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 #define PWM_PIN 10
 #define NUM_SAMPLES 30
@@ -63,8 +62,6 @@ void setup() {
   TCCR1A = _BV(COM1B1) | _BV(WGM10);
   TCCR1B = _BV(WGM12) | _BV(CS10);
   OCR1B = 128; // 50% duty
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: Failed to initialize ADS7128!"));

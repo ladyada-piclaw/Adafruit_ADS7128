@@ -18,7 +18,6 @@
 
 #include <Adafruit_ADS7128.h>
 #include <Adafruit_ZeroDMA.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -180,8 +179,6 @@ void setup() {
   Serial.println(F("ADS7128 ZCD Test (QT Py M0 DMA DAC)"));
   Serial.println(F("------------------------------------"));
   Serial.println();
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: ADS7128 not found!"));

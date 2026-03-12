@@ -12,7 +12,6 @@
  */
 
 #include <Adafruit_ADS7128.h>
-#include <Wire.h>
 
 Adafruit_ADS7128 ads;
 
@@ -26,8 +25,6 @@ void setup() {
   }
   Serial.println(F("ADS7128 GPIO Chain Walk Test"));
   Serial.println(F("-----------------------------"));
-
-  Wire.begin();
 
   if (!ads.begin()) {
     Serial.println(F("ERROR: Failed to initialize ADS7128!"));
