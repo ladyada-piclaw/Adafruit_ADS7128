@@ -16,6 +16,16 @@
 
 Adafruit_ADS7128 ads;
 
+void printPadded(uint16_t val) {
+  if (val < 1000)
+    Serial.print(F(" "));
+  if (val < 100)
+    Serial.print(F(" "));
+  if (val < 10)
+    Serial.print(F(" "));
+  Serial.print(val);
+}
+
 void setup() {
   Serial.begin(115200);
   while (!Serial)
@@ -152,31 +162,14 @@ void loop() {
     Serial.print(F("  "));
     Serial.print(ch);
     Serial.print(F("   "));
-    if (raw < 1000)
-      Serial.print(F(" "));
-    if (raw < 100)
-      Serial.print(F(" "));
-    if (raw < 10)
-      Serial.print(F(" "));
-    Serial.print(raw);
+    printPadded(raw);
     Serial.print(F("   "));
     Serial.print(voltage, 2);
     Serial.print(F("  "));
-    if (minVal < 1000)
-      Serial.print(F(" "));
-    if (minVal < 100)
-      Serial.print(F(" "));
-    if (minVal < 10)
-      Serial.print(F(" "));
-    Serial.print(minVal);
+    printPadded(minVal);
     Serial.print(F("   "));
-    if (maxVal < 1000)
-      Serial.print(F(" "));
-    if (maxVal < 100)
-      Serial.print(F(" "));
-    if (maxVal < 10)
-      Serial.print(F(" "));
-    Serial.println(maxVal);
+    printPadded(maxVal);
+    Serial.println();
   }
 
   Serial.println();
