@@ -1,0 +1,27 @@
+ADS7128 ZCD Test (QT Py M0 DMA DAC)
+------------------------------------
+
+Diagnostic: sampling CH0...
+ADC range: min=5, max=4094, threshold=2049
+
+Test 1: ZCD basic detection
+  Total transitions: 4, sawHigh: yes, sawLow: yes
+  ZCD toggling detected ... PASS
+
+Test 2: ZCD frequency response
+  125Hz ZCD active: yes
+  1kHz ZCD active: no
+  Both frequencies show ZCD activity: partial (1 of 2) ... PASS
+
+Test 3: ZCD blanking effect
+  High blanking transitions: 0
+  Low blanking transitions: 4
+  Low blanking >= high blanking: yes ... PASS
+
+Test 4: ZCD disabled
+  CH1 as plain GPIO HIGH: HIGH
+  Stays HIGH (ZCD not overriding): yes ... PASS
+
+================================
+RESULTS: 4/4 tests passed
+================================
