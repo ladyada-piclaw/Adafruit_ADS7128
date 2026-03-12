@@ -98,42 +98,28 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
 
   switch (mode) {
     case ADS7128_ANALOG:
-      if (!_clearBits(ADS7128_REG_PIN_CFG, mask)) {
+      if (!_clearBits(ADS7128_REG_PIN_CFG, mask))
         return false;
-      }
       break;
 
     case ADS7128_INPUT:
-      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask) ||
+          !_clearBits(ADS7128_REG_GPIO_CFG, mask))
         return false;
-      }
-      if (!_clearBits(ADS7128_REG_GPIO_CFG, mask)) {
-        return false;
-      }
       break;
 
     case ADS7128_OUTPUT:
-      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask) ||
+          !_setBits(ADS7128_REG_GPIO_CFG, mask) ||
+          !_setBits(ADS7128_REG_GPO_DRIVE_CFG, mask))
         return false;
-      }
-      if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
-        return false;
-      }
-      if (!_setBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
-        return false;
-      }
       break;
 
     case ADS7128_OUTPUT_OPENDRAIN:
-      if (!_setBits(ADS7128_REG_PIN_CFG, mask)) {
+      if (!_setBits(ADS7128_REG_PIN_CFG, mask) ||
+          !_setBits(ADS7128_REG_GPIO_CFG, mask) ||
+          !_clearBits(ADS7128_REG_GPO_DRIVE_CFG, mask))
         return false;
-      }
-      if (!_setBits(ADS7128_REG_GPIO_CFG, mask)) {
-        return false;
-      }
-      if (!_clearBits(ADS7128_REG_GPO_DRIVE_CFG, mask)) {
-        return false;
-      }
       break;
 
     default:
@@ -296,20 +282,11 @@ bool Adafruit_ADS7128::setSequenceChannels(uint8_t channelMask) {
  * @return true on success, false on I2C error
  */
 bool Adafruit_ADS7128::startSequence() {
-  // Enable statistics
-  if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN)) {
+  // Enable statistics, channel ID append, and autonomous mode
+  if (!_setBits(ADS7128_REG_GENERAL_CFG, ADS7128_BIT_STATS_EN) ||
+      !_setBits(ADS7128_REG_DATA_CFG, ADS7128_APPEND_CHID) ||
+      !_setBits(ADS7128_REG_OPMODE_CFG, ADS7128_BIT_CONV_MODE))
     return false;
-  }
-
-  // Enable channel ID appending to data
-  if (!_setBits(ADS7128_REG_DATA_CFG, ADS7128_APPEND_CHID)) {
-    return false;
-  }
-
-  // Set CONV_MODE=1 (autonomous) in OPMODE_CFG
-  if (!_setBits(ADS7128_REG_OPMODE_CFG, ADS7128_BIT_CONV_MODE)) {
-    return false;
-  }
 
   // Set SEQ_MODE=1 and SEQ_START=1 in SEQUENCE_CFG
   return _writeRegister(ADS7128_REG_SEQUENCE_CFG,
