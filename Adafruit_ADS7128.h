@@ -15,7 +15,7 @@
 #include <Adafruit_I2CDevice.h>
 #include <Arduino.h>
 
-/** Default I2C address (ADDR pin to GND via ~10k ohm) */
+/** Default I2C address (ADDR pin floating) */
 #define ADS7128_DEFAULT_ADDR 0x10
 
 /** Opcode for single register read */
