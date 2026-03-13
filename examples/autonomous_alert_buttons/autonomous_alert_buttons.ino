@@ -50,7 +50,7 @@ void setup() {
 
   // Set thresholds for all 8 channels:
   //   Low threshold at ~AVDD/4 (button press pulls to GND)
-  //   High threshold at max (don't trigger on high)
+  //   High threshold at max (change to 3000 to trigger on release as well!)
   for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
     ads.setLowThreshold(ch, 1000);
     ads.setHighThreshold(ch, 4095);

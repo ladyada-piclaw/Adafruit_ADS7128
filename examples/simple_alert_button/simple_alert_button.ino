@@ -46,7 +46,7 @@ void setup() {
 
   // Set low threshold at ~AVDD/4 (button press = GND)
   ads.setLowThreshold(BUTTON_CH, 1000);
-  ads.setHighThreshold(BUTTON_CH, 4095); // Don't trigger on high
+  ads.setHighThreshold(BUTTON_CH, 4095); // Change to 3000 to trigger on release as well!
 
   // Enable DWC and alert on CH0
   ads.enableDWC(true);
