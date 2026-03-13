@@ -15,6 +15,7 @@ var searchData=
   ['getmax',['getMax',['../class_adafruit___a_d_s7128.html#a29babe3c6b24553fd1148df5a1d64006',1,'Adafruit_ADS7128']]],
   ['getmin',['getMin',['../class_adafruit___a_d_s7128.html#a16dda9771d90048b48a8ca52435674a1',1,'Adafruit_ADS7128']]],
   ['getoversampling',['getOversampling',['../class_adafruit___a_d_s7128.html#a635166a09885516873cf9f97fda01379',1,'Adafruit_ADS7128']]],
+  ['getpinmode',['getPinMode',['../class_adafruit___a_d_s7128.html#a9d4c99fa5c1e5cade28104bd3ab17bf8',1,'Adafruit_ADS7128']]],
   ['getrecent',['getRecent',['../class_adafruit___a_d_s7128.html#ad54e40d87e3b23a4bac9932b998a0772',1,'Adafruit_ADS7128']]],
   ['getrms',['getRMS',['../class_adafruit___a_d_s7128.html#a991cb9c45ce041a583895d041b6e335d',1,'Adafruit_ADS7128']]],
   ['getrmsenabled',['getRMSEnabled',['../class_adafruit___a_d_s7128.html#a7261e40abd74a47ce1fa09b4557a0cb4',1,'Adafruit_ADS7128']]],

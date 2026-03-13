@@ -79,6 +79,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a25c0048195d83f5c3c5c1164117c295e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a25c0048195d83f5c3c5c1164117c295e">pinMode</a> (uint8_t channel, <a class="el" href="_adafruit___a_d_s7128_8h.html#ab81543904bb461cdb74e5a1663721c05">ads7128_pin_mode_t</a> mode)</td></tr>
 <tr class="memdesc:a25c0048195d83f5c3c5c1164117c295e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure a channel as analog input, digital input, or digital output.  <a href="#a25c0048195d83f5c3c5c1164117c295e">More...</a><br /></td></tr>
 <tr class="separator:a25c0048195d83f5c3c5c1164117c295e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d4c99fa5c1e5cade28104bd3ab17bf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_adafruit___a_d_s7128_8h.html#ab81543904bb461cdb74e5a1663721c05">ads7128_pin_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a9d4c99fa5c1e5cade28104bd3ab17bf8">getPinMode</a> (uint8_t channel)</td></tr>
+<tr class="memdesc:a9d4c99fa5c1e5cade28104bd3ab17bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current pin mode for a channel.  <a href="#a9d4c99fa5c1e5cade28104bd3ab17bf8">More...</a><br /></td></tr>
+<tr class="separator:a9d4c99fa5c1e5cade28104bd3ab17bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab449f0b9e20fae715ff16b52ecdea50d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#ab449f0b9e20fae715ff16b52ecdea50d">digitalWrite</a> (uint8_t channel, bool value)</td></tr>
 <tr class="memdesc:ab449f0b9e20fae715ff16b52ecdea50d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set digital output level.  <a href="#ab449f0b9e20fae715ff16b52ecdea50d">More...</a><br /></td></tr>
 <tr class="separator:ab449f0b9e20fae715ff16b52ecdea50d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -310,6 +313,33 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error or invalid channel </dd></dl>
+
+</div>
+</div>
+<a id="a9d4c99fa5c1e5cade28104bd3ab17bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d4c99fa5c1e5cade28104bd3ab17bf8">&#9670;&nbsp;</a></span>getPinMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_adafruit___a_d_s7128_8h.html#ab81543904bb461cdb74e5a1663721c05">ads7128_pin_mode_t</a> Adafruit_ADS7128::getPinMode </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current pin mode for a channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>Channel number (0-7) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Current pin mode (ADS7128_ANALOG, ADS7128_INPUT, ADS7128_OUTPUT, or ADS7128_OUTPUT_OPENDRAIN). Returns ADS7128_ANALOG on error. </dd></dl>
 
 </div>
 </div>
