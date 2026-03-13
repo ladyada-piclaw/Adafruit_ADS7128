@@ -130,6 +130,26 @@ bool Adafruit_ADS7128::pinMode(uint8_t channel, ads7128_pin_mode_t mode) {
 }
 
 /**
+ * @brief Get the current pin mode for a channel
+ * @param channel Channel number (0-7)
+ * @return Current pin mode (ADS7128_ANALOG, ADS7128_INPUT, ADS7128_OUTPUT,
+ *         or ADS7128_OUTPUT_OPENDRAIN). Returns ADS7128_ANALOG on error.
+ */
+ads7128_pin_mode_t Adafruit_ADS7128::getPinMode(uint8_t channel) {
+  if (channel > 7)
+    return ADS7128_ANALOG;
+  uint8_t mask = 1 << channel;
+  bool isDigital = (_readRegister(ADS7128_REG_PIN_CFG) & mask) != 0;
+  if (!isDigital)
+    return ADS7128_ANALOG;
+  bool isOutput = (_readRegister(ADS7128_REG_GPIO_CFG) & mask) != 0;
+  if (!isOutput)
+    return ADS7128_INPUT;
+  bool isPushPull = (_readRegister(ADS7128_REG_GPO_DRIVE_CFG) & mask) != 0;
+  return isPushPull ? ADS7128_OUTPUT : ADS7128_OUTPUT_OPENDRAIN;
+}
+
+/**
  * @brief Set digital output level
  * @param channel Channel number (0-7)
  * @param value true=HIGH, false=LOW

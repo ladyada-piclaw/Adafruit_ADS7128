@@ -90,13 +90,30 @@ void setup() {
   Serial.println(ads.getStatisticsEnabled() ? F("Enabled") : F("Disabled"));
 
   // === Pin Configuration ===
-  // All channels default to analog input. Configure GPIOs here.
-  Serial.println(F("\n--- Pin Configuration ---"));
-  Serial.println(F("All channels: analog input (default)"));
-  // Uncomment to configure GPIOs:
-  // ads.pinMode(0, ADS7128_OUTPUT);          // Push-pull output
-  // ads.pinMode(1, ADS7128_INPUT);           // Digital input
+  // All channels default to analog input. Configure GPIOs here:
+  // ads.pinMode(0, ADS7128_OUTPUT);           // Push-pull output
+  // ads.pinMode(1, ADS7128_INPUT);            // Digital input
   // ads.pinMode(2, ADS7128_OUTPUT_OPENDRAIN); // Open-drain output
+  Serial.println(F("\n--- Pin Configuration ---"));
+  for (uint8_t ch = 0; ch < 8; ch++) {
+    Serial.print(F("CH"));
+    Serial.print(ch);
+    Serial.print(F(": "));
+    switch (ads.getPinMode(ch)) {
+      case ADS7128_ANALOG:
+        Serial.println(F("analog"));
+        break;
+      case ADS7128_INPUT:
+        Serial.println(F("digital input"));
+        break;
+      case ADS7128_OUTPUT:
+        Serial.println(F("digital output (push-pull)"));
+        break;
+      case ADS7128_OUTPUT_OPENDRAIN:
+        Serial.println(F("digital output (open-drain)"));
+        break;
+    }
+  }
 
   // === Autonomous Sequence (optional) ===
   // Uncomment to use auto-sequence instead of manual reads:

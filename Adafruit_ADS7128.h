@@ -205,6 +205,7 @@ class Adafruit_ADS7128 {
   // -------------------------------------------------------------------------
 
   bool pinMode(uint8_t channel, ads7128_pin_mode_t mode);
+  ads7128_pin_mode_t getPinMode(uint8_t channel);
   bool digitalWrite(uint8_t channel, bool value);
   bool digitalRead(uint8_t channel);
 
