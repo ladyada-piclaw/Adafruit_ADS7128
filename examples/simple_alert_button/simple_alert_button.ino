@@ -17,7 +17,6 @@
 
 #include <Adafruit_ADS7128.h>
 
-#define ADS_VREF 3.3
 #define ALERT_PIN 3
 #define BUTTON_CH 0
 
@@ -45,9 +44,8 @@ void setup() {
 
   // CH0 defaults to analog input — that's what we want
 
-  // Set low threshold: ~0.5V (button press = GND)
-  uint16_t threshold = (uint16_t)(0.5 / ADS_VREF * 4095);
-  ads.setLowThreshold(BUTTON_CH, threshold);
+  // Set low threshold at ~AVDD/4 (button press = GND)
+  ads.setLowThreshold(BUTTON_CH, 1000);
   ads.setHighThreshold(BUTTON_CH, 4095); // Don't trigger on high
 
   // Enable DWC and alert on CH0
@@ -74,11 +72,8 @@ void loop() {
   if (alertFired) {
     alertFired = false;
 
-    Serial.print(F("Button pressed! CH0 = "));
-    Serial.print(raw);
-    Serial.print(F(" ("));
-    Serial.print(raw * ADS_VREF / 4095.0, 2);
-    Serial.println(F("V)"));
+    Serial.print(F("Button pressed! CH0 raw = "));
+    Serial.println(raw);
 
     ads.clearEventFlags();
   }

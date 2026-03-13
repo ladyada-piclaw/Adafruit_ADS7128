@@ -19,7 +19,6 @@
 
 #include <Adafruit_ADS7128.h>
 
-#define ADS_VREF 3.3
 #define ALERT_PIN 3
 #define NUM_CHANNELS 8
 
@@ -50,11 +49,10 @@ void setup() {
   // All channels default to analog input — that's what we want
 
   // Set thresholds for all 8 channels:
-  //   Low threshold at ~0.5V (button press pulls to GND)
+  //   Low threshold at ~AVDD/4 (button press pulls to GND)
   //   High threshold at max (don't trigger on high)
-  uint16_t lowThresh = (uint16_t)(0.5 / ADS_VREF * 4095);
   for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
-    ads.setLowThreshold(ch, lowThresh);
+    ads.setLowThreshold(ch, 1000);
     ads.setHighThreshold(ch, 4095);
   }
 
