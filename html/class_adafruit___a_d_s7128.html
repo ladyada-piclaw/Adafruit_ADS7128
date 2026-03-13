@@ -166,6 +166,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afb3afa3f074280ed33f2f87ded545a0c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#afb3afa3f074280ed33f2f87ded545a0c">getHysteresis</a> (uint8_t channel)</td></tr>
 <tr class="memdesc:afb3afa3f074280ed33f2f87ded545a0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get hysteresis for a channel.  <a href="#afb3afa3f074280ed33f2f87ded545a0c">More...</a><br /></td></tr>
 <tr class="separator:afb3afa3f074280ed33f2f87ded545a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dcc43ec94e7c1aa69fcf0ac7dfdef58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a4dcc43ec94e7c1aa69fcf0ac7dfdef58">setEventRegion</a> (uint8_t channel, bool inBand)</td></tr>
+<tr class="memdesc:a4dcc43ec94e7c1aa69fcf0ac7dfdef58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set event region mode for a channel.  <a href="#a4dcc43ec94e7c1aa69fcf0ac7dfdef58">More...</a><br /></td></tr>
+<tr class="separator:a4dcc43ec94e7c1aa69fcf0ac7dfdef58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafd95c67442c4f2b16efc6615cf00485"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#aafd95c67442c4f2b16efc6615cf00485">getEventRegion</a> (uint8_t channel)</td></tr>
+<tr class="memdesc:aafd95c67442c4f2b16efc6615cf00485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event region mode for a channel.  <a href="#aafd95c67442c4f2b16efc6615cf00485">More...</a><br /></td></tr>
+<tr class="separator:aafd95c67442c4f2b16efc6615cf00485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15f171de2e10874ed0c476515887d5cb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_adafruit___a_d_s7128.html#a15f171de2e10874ed0c476515887d5cb">setEventCount</a> (uint8_t channel, uint8_t count)</td></tr>
 <tr class="memdesc:a15f171de2e10874ed0c476515887d5cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set event count for a channel (consecutive samples before alert)  <a href="#a15f171de2e10874ed0c476515887d5cb">More...</a><br /></td></tr>
 <tr class="separator:a15f171de2e10874ed0c476515887d5cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1088,6 +1094,71 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>4-bit hysteresis value (0-15), or 0xFF on error </dd></dl>
+
+</div>
+</div>
+<a id="a4dcc43ec94e7c1aa69fcf0ac7dfdef58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dcc43ec94e7c1aa69fcf0ac7dfdef58">&#9670;&nbsp;</a></span>setEventRegion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::setEventRegion </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>channel</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>inBand</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set event region mode for a channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>Channel number (0-7) </td></tr>
+    <tr><td class="paramname">inBand</td><td>true = in-band mode (digital: logic 0 sets low flag), false = out-of-window mode (digital: logic 1 sets high flag) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false on I2C error </dd></dl>
+
+</div>
+</div>
+<a id="aafd95c67442c4f2b16efc6615cf00485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aafd95c67442c4f2b16efc6615cf00485">&#9670;&nbsp;</a></span>getEventRegion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Adafruit_ADS7128::getEventRegion </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get event region mode for a channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>Channel number (0-7) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if in-band mode, false if out-of-window mode </dd></dl>
 
 </div>
 </div>

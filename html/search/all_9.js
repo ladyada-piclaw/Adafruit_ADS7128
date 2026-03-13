@@ -2,6 +2,7 @@ var searchData=
 [
   ['setalertchannels',['setAlertChannels',['../class_adafruit___a_d_s7128.html#a1418177d303ae25774ee15e6b3d5aa48',1,'Adafruit_ADS7128']]],
   ['seteventcount',['setEventCount',['../class_adafruit___a_d_s7128.html#a15f171de2e10874ed0c476515887d5cb',1,'Adafruit_ADS7128']]],
+  ['seteventregion',['setEventRegion',['../class_adafruit___a_d_s7128.html#a4dcc43ec94e7c1aa69fcf0ac7dfdef58',1,'Adafruit_ADS7128']]],
   ['sethighthreshold',['setHighThreshold',['../class_adafruit___a_d_s7128.html#a73d7b92d7f7f33b82b56cd3a1d0117b5',1,'Adafruit_ADS7128']]],
   ['sethysteresis',['setHysteresis',['../class_adafruit___a_d_s7128.html#a09cffcd8478ff4f34ac6355bd2175fdb',1,'Adafruit_ADS7128']]],
   ['setlowthreshold',['setLowThreshold',['../class_adafruit___a_d_s7128.html#a2eb6bb54431255470a25a1db8847d7db',1,'Adafruit_ADS7128']]],

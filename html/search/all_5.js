@@ -9,6 +9,7 @@ var searchData=
   ['geteventflags',['getEventFlags',['../class_adafruit___a_d_s7128.html#a25640c92b5082d17663da8d51adf6827',1,'Adafruit_ADS7128']]],
   ['geteventhighflags',['getEventHighFlags',['../class_adafruit___a_d_s7128.html#a967fd211833a89156cb22b36d83c480b',1,'Adafruit_ADS7128']]],
   ['geteventlowflags',['getEventLowFlags',['../class_adafruit___a_d_s7128.html#aa5637a43448a2d153ab5b8cad0ad1132',1,'Adafruit_ADS7128']]],
+  ['geteventregion',['getEventRegion',['../class_adafruit___a_d_s7128.html#aafd95c67442c4f2b16efc6615cf00485',1,'Adafruit_ADS7128']]],
   ['gethighthreshold',['getHighThreshold',['../class_adafruit___a_d_s7128.html#a6fa424e14c90855fbc61f82441ccc32c',1,'Adafruit_ADS7128']]],
   ['gethysteresis',['getHysteresis',['../class_adafruit___a_d_s7128.html#afb3afa3f074280ed33f2f87ded545a0c',1,'Adafruit_ADS7128']]],
   ['getlowthreshold',['getLowThreshold',['../class_adafruit___a_d_s7128.html#a1495c84a196c6d1a2efc2cf1cab0cc09',1,'Adafruit_ADS7128']]],
