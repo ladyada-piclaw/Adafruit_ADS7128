@@ -1,0 +1,27 @@
+ADS7128 GPIO Digital Input Alert Test
+--------------------------------------
+
+Test 1: HIGH triggers EVENT_HIGH_FLAG (EVENT_RGN=0)
+  CH1 digital: HIGH
+  EVENT_HIGH_FLAG bit 1: set
+  ALERT fired: yes
+  ... PASS
+
+Test 2: LOW triggers EVENT_LOW_FLAG (EVENT_RGN=1)
+  CH1 digital: LOW
+  EVENT_LOW_FLAG bit 1: set
+  ALERT fired: yes
+  ... PASS
+
+Test 3: Press/release cycle (flip EVENT_RGN)
+  Press detected (LOW flag): yes
+  Release detected (HIGH flag): yes
+  ... PASS
+
+Test 4: Disabled alert channel does not fire
+  ALERT fired with no channels enabled: no (good)
+  ... PASS
+
+================================
+RESULTS: 4/4 tests passed
+================================

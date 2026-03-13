@@ -264,6 +264,8 @@ class Adafruit_ADS7128 {
   uint16_t getLowThreshold(uint8_t channel);
   bool setHysteresis(uint8_t channel, uint8_t hysteresis);
   uint8_t getHysteresis(uint8_t channel);
+  bool setEventRegion(uint8_t channel, bool inBand);
+  bool getEventRegion(uint8_t channel);
   bool setEventCount(uint8_t channel, uint8_t count);
   uint8_t getEventFlags();
   uint8_t getEventHighFlags();

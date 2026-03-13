@@ -577,6 +577,34 @@ uint8_t Adafruit_ADS7128::getHysteresis(uint8_t channel) {
 }
 
 /**
+ * @brief Set event region mode for a channel
+ * @param channel Channel number (0-7)
+ * @param inBand true = in-band mode (digital: logic 0 sets low flag),
+ *               false = out-of-window mode (digital: logic 1 sets high flag)
+ * @return true on success, false on I2C error
+ */
+bool Adafruit_ADS7128::setEventRegion(uint8_t channel, bool inBand) {
+  if (channel > 7)
+    return false;
+  uint8_t mask = 1 << channel;
+  if (inBand)
+    return _setBits(ADS7128_REG_EVENT_RGN, mask);
+  else
+    return _clearBits(ADS7128_REG_EVENT_RGN, mask);
+}
+
+/**
+ * @brief Get event region mode for a channel
+ * @param channel Channel number (0-7)
+ * @return true if in-band mode, false if out-of-window mode
+ */
+bool Adafruit_ADS7128::getEventRegion(uint8_t channel) {
+  if (channel > 7)
+    return false;
+  return (_readRegister(ADS7128_REG_EVENT_RGN) & (1 << channel)) != 0;
+}
+
+/**
  * @brief Set event count for a channel (consecutive samples before alert)
  * @param channel Channel number (0-7)
  * @param count 4-bit event count (0-15, alert after count+1 samples)
