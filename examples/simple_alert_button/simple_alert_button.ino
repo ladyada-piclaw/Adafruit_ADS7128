@@ -1,15 +1,15 @@
 /*!
  * @file simple_alert_button.ino
- * @brief ADS7128 single button example using DWC + ALERT pin
+ * @brief ADS7128 analog threshold alert example using DWC + ALERT pin
  *
- * Monitors one channel for a button press using the digital window
- * comparator. When pressed, the ALERT pin goes low. This example
- * uses manual (non-autonomous) mode, reading the channel on demand.
+ * Monitors CH0 as an analog input with a voltage threshold. When the
+ * signal crosses the low threshold, the ALERT pin fires. This uses
+ * manual mode — the host reads CH0 periodically and the DWC compares
+ * against the programmed thresholds.
  *
  * Hardware:
- * - CH0: 10K pull-up to AVDD, button to GND
+ * - CH0: Analog signal (e.g., 10K pull-up to AVDD with button to GND)
  * - ALERT pin connected to Arduino interrupt pin (D3 on Uno/Metro)
- * - Note: ADS7128 has no internal pull-ups, external 10K required
  *
  * Written by Limor 'ladyada' Fried with assistance from Claude Code for
  * Adafruit Industries. MIT license.
@@ -33,8 +33,8 @@ void setup() {
   while (!Serial)
     delay(10);
 
-  Serial.println(F("ADS7128 Simple Button Alert Example"));
-  Serial.println(F("===================================="));
+  Serial.println(F("ADS7128 Analog Threshold Alert Example"));
+  Serial.println(F("======================================="));
 
   if (!ads.begin()) {
     Serial.println(F("Failed to find ADS7128!"));
@@ -44,9 +44,10 @@ void setup() {
 
   // CH0 defaults to analog input — that's what we want
 
-  // Set low threshold at ~AVDD/4 (button press = GND)
+  // Set low threshold at ~AVDD/4
   ads.setLowThreshold(BUTTON_CH, 1000);
-  ads.setHighThreshold(BUTTON_CH, 4095); // Change to 3000 to trigger on release as well!
+  ads.setHighThreshold(BUTTON_CH,
+                       4095); // Change to 3000 to trigger on release as well!
 
   // Enable DWC and alert on CH0
   ads.enableDWC(true);
@@ -60,19 +61,19 @@ void setup() {
   pinMode(ALERT_PIN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(ALERT_PIN), alertISR, FALLING);
 
-  Serial.println(F("Waiting for button press on CH0..."));
-  Serial.println(F("(10K pull-up to AVDD, button to GND)"));
+  Serial.println(F("Monitoring CH0 analog input..."));
+  Serial.println(F("ALERT fires when signal drops below threshold."));
   Serial.println();
 }
 
 void loop() {
-  // Periodically read CH0 so the DWC can compare against thresholds
+  // Read CH0 so the DWC can compare against thresholds
   uint16_t raw = ads.analogRead(BUTTON_CH);
 
   if (alertFired) {
     alertFired = false;
 
-    Serial.print(F("Button pressed! CH0 raw = "));
+    Serial.print(F("ALERT! CH0 raw = "));
     Serial.println(raw);
 
     ads.clearEventFlags();
