@@ -1,12 +1,12 @@
 /*!
  * @file autonomous_alert_buttons.ino
- * @brief ADS7128 8-button interrupt example using autonomous mode + ALERT
+ * @brief ADS7128 8-button interrupt example using digital inputs + ALERT
  *
  * Detects button presses on all 8 channels without polling over I2C.
- * The ADS7128 continuously scans all channels in autonomous mode and
- * fires the ALERT pin when any button is pressed below the threshold.
- * The host MCU only needs to respond to the interrupt — no periodic
- * I2C reads required, saving bus bandwidth and CPU time.
+ * Channels are configured as digital inputs with the digital window
+ * comparator (DWC) monitoring their logic state. When any button pulls
+ * a channel low, the ALERT pin fires — no autonomous ADC scanning or
+ * periodic I2C reads required.
  *
  * Hardware:
  * - CH0-CH7: Each with 10K pull-up to AVDD, button to GND
@@ -35,10 +35,10 @@ void setup() {
   while (!Serial)
     delay(10);
 
-  Serial.println(F("ADS7128 Autonomous 8-Button Alert Example"));
-  Serial.println(F("=========================================="));
+  Serial.println(F("ADS7128 8-Button Digital Input Alert Example"));
+  Serial.println(F("============================================="));
   Serial.println(F("Detects button presses on CH0-CH7 via ALERT interrupt."));
-  Serial.println(F("No I2C polling needed — ADS7128 monitors autonomously."));
+  Serial.println(F("No I2C polling needed — DWC monitors digital inputs."));
 
   if (!ads.begin()) {
     Serial.println(F("Failed to find ADS7128!"));
@@ -46,24 +46,17 @@ void setup() {
       delay(100);
   }
 
-  // All channels default to analog input — that's what we want
-
-  // Set thresholds for all 8 channels:
-  //   Low threshold at ~AVDD/4 (button press pulls to GND)
-  //   High threshold at max (change to 3000 to trigger on release as well!)
+  // Configure all channels as digital inputs
   for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
-    ads.setLowThreshold(ch, 1000);
-    ads.setHighThreshold(ch, 4095);
+    ads.pinMode(ch, ADS7128_INPUT);
   }
 
   // Enable DWC and alert on all 8 channels
+  // For digital inputs, EVENT_LOW_FLAG fires on logic 0 (button press)
+  // and EVENT_HIGH_FLAG fires on logic 1 (button release)
   ads.enableDWC(true);
   ads.setAlertChannels(0xFF);  // All channels
   ads.configureAlert(true, 0); // Push-pull, active low
-
-  // Start autonomous sequence scanning all channels
-  ads.setSequenceChannels(0xFF);
-  ads.startSequence();
 
   // Clear any stale events
   ads.clearEventFlags();
@@ -81,12 +74,16 @@ void loop() {
   if (alertFired) {
     alertFired = false;
 
-    // Read which channels triggered the low event
     uint8_t lowFlags = ads.getEventLowFlags();
+    uint8_t highFlags = ads.getEventHighFlags();
 
     for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
       if (lowFlags & (1 << ch)) {
-        Serial.print(F("Button pressed on CH"));
+        Serial.print(F("Button PRESSED on CH"));
+        Serial.println(ch);
+      }
+      if (highFlags & (1 << ch)) {
+        Serial.print(F("Button RELEASED on CH"));
         Serial.println(ch);
       }
     }
