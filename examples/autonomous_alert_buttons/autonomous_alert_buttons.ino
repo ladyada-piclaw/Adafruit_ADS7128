@@ -5,8 +5,8 @@
  * Detects button presses on all 8 channels without polling over I2C.
  * Channels are configured as digital inputs with the digital window
  * comparator (DWC) monitoring their logic state. When any button pulls
- * a channel low, the ALERT pin fires — no autonomous ADC scanning or
- * periodic I2C reads required.
+ * a channel low, the ALERT pin fires. The host only needs to respond
+ * to the interrupt — no periodic I2C reads required.
  *
  * Hardware:
  * - CH0-CH7: Each with 10K pull-up to AVDD, button to GND
@@ -52,11 +52,17 @@ void setup() {
   }
 
   // Enable DWC and alert on all 8 channels
-  // For digital inputs, EVENT_LOW_FLAG fires on logic 0 (button press)
-  // and EVENT_HIGH_FLAG fires on logic 1 (button release)
+  // EVENT_RGN=1 (in-band) so EVENT_LOW_FLAG fires on logic 0 (button press)
   ads.enableDWC(true);
   ads.setAlertChannels(0xFF);  // All channels
   ads.configureAlert(true, 0); // Push-pull, active low
+  for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
+    ads.setEventRegion(ch, true); // In-band mode for press detection
+  }
+
+  // Start autonomous scanning so DWC evaluates digital inputs
+  ads.setSequenceChannels(0xFF);
+  ads.startSequence();
 
   // Clear any stale events
   ads.clearEventFlags();
@@ -75,15 +81,10 @@ void loop() {
     alertFired = false;
 
     uint8_t lowFlags = ads.getEventLowFlags();
-    uint8_t highFlags = ads.getEventHighFlags();
 
     for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
       if (lowFlags & (1 << ch)) {
-        Serial.print(F("Button PRESSED on CH"));
-        Serial.println(ch);
-      }
-      if (highFlags & (1 << ch)) {
-        Serial.print(F("Button RELEASED on CH"));
+        Serial.print(F("Button pressed on CH"));
         Serial.println(ch);
       }
     }
