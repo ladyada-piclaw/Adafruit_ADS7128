@@ -1,16 +1,14 @@
 /*!
  * @file 06_autonomous_alert_buttons.ino
- * @brief ADS7128 8-button interrupt example using digital inputs + ALERT
+ * @brief ADS7128 8-button autonomous example using digital inputs + DWC
  *
- * Detects button presses on all 8 channels without polling over I2C.
- * Channels are configured as digital inputs with the digital window
- * comparator (DWC) monitoring their logic state. When any button pulls
- * a channel low, the ALERT pin fires. The host only needs to respond
- * to the interrupt — no periodic I2C reads required.
+ * Detects button press and release events on all 8 channels using the
+ * digital window comparator (DWC). Channels are configured as digital
+ * inputs and the chip auto-scans them in autonomous mode — the host just
+ * polls the event flags over I2C. No edge interrupt needed.
  *
  * Hardware:
  * - CH0-CH7: Each with 10K pull-up to AVDD, button to GND
- * - ALERT pin connected to Arduino interrupt pin (D3 on Uno/Metro)
  * - Note: ADS7128 has no internal pull-ups, external 10K required
  *
  * Written by Limor 'ladyada' Fried with assistance from Claude Code for
@@ -19,16 +17,9 @@
 
 #include <Adafruit_ADS7128.h>
 
-#define ALERT_PIN 3
 #define NUM_CHANNELS 8
 
 Adafruit_ADS7128 ads;
-
-volatile bool alertFired = false;
-
-void alertISR() {
-  alertFired = true;
-}
 
 void setup() {
   Serial.begin(115200);
@@ -37,8 +28,8 @@ void setup() {
 
   Serial.println(F("ADS7128 8-Button Digital Input Alert Example"));
   Serial.println(F("============================================="));
-  Serial.println(F("Detects button presses on CH0-CH7 via ALERT interrupt."));
-  Serial.println(F("No I2C polling needed — DWC monitors digital inputs."));
+  Serial.println(F("Detects press/release on CH0-CH7 via DWC event flags."));
+  Serial.println(F("Chip auto-scans inputs; host just polls flags over I2C."));
 
   // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
   if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
@@ -65,12 +56,8 @@ void setup() {
   ads.setSequenceChannels(0xFF);
   ads.startSequence();
 
-  // Clear any stale events
+  // Clear any stale events from power-up
   ads.clearEventFlags();
-
-  // Attach interrupt — ALERT is active low
-  pinMode(ALERT_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(ALERT_PIN), alertISR, FALLING);
 
   Serial.println(F("\nWaiting for button presses on CH0-CH7..."));
   Serial.println(F("(10K pull-up to AVDD per channel, button to GND)"));
@@ -78,18 +65,29 @@ void setup() {
 }
 
 void loop() {
-  if (alertFired) {
-    alertFired = false;
+  uint8_t lowFlags = ads.getEventLowFlags();
+  uint8_t highFlags = ads.getEventHighFlags();
 
-    uint8_t lowFlags = ads.getEventLowFlags();
+  // Track each channel's last reported state. The DWC flag stays asserted
+  // while the input is in the event region, so we only print transitions.
+  static uint8_t pressed = 0;
 
-    for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
-      if (lowFlags & (1 << ch)) {
-        Serial.print(F("Button pressed on CH"));
-        Serial.println(ch);
-      }
+  for (uint8_t ch = 0; ch < NUM_CHANNELS; ch++) {
+    uint8_t mask = 1 << ch;
+    if ((lowFlags & mask) && !(pressed & mask)) {
+      Serial.print(F("PRESSED  CH"));
+      Serial.println(ch);
+      pressed |= mask;
+    } else if ((highFlags & mask) && (pressed & mask)) {
+      Serial.print(F("RELEASED CH"));
+      Serial.println(ch);
+      pressed &= ~mask;
     }
+  }
 
+  if (lowFlags || highFlags) {
     ads.clearEventFlags();
   }
+
+  delay(10);
 }

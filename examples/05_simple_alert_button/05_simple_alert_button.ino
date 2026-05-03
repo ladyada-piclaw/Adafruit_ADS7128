@@ -51,7 +51,7 @@ void setup() {
   ads.clearEventFlags();
 
   Serial.println(F("Monitoring CH0 analog input..."));
-  Serial.println(F("Event fires when signal drops below threshold."));
+  Serial.println(F("Press fires below 1000, release fires above 3000."));
   Serial.println();
 }
 
