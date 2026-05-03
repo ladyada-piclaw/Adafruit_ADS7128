@@ -63,13 +63,20 @@ void loop() {
   uint8_t highFlags = ads.getEventHighFlags();
   uint8_t mask = (1 << BUTTON_CH);
 
-  if (lowFlags & mask) {
+  // Track last reported state so we only print on transitions. The DWC
+  // event flag stays asserted as long as the signal is in the event region,
+  // so clearing it just re-asserts on the next read.
+  static bool wasPressed = false;
+
+  if ((lowFlags & mask) && !wasPressed) {
     Serial.print(F("PRESSED!  CH0 raw = "));
     Serial.println(raw);
+    wasPressed = true;
     ads.clearEventFlags();
-  } else if (highFlags & mask) {
+  } else if ((highFlags & mask) && wasPressed) {
     Serial.print(F("RELEASED! CH0 raw = "));
     Serial.println(raw);
+    wasPressed = false;
     ads.clearEventFlags();
   }
 
