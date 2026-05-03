@@ -37,10 +37,10 @@ void setup() {
 
   // CH0 defaults to analog input — that's what we want
 
-  // Set low threshold at ~AVDD/4
+  // Trigger on press (signal drops below 1000) and release (signal rises
+  // above 3000). Set high threshold to 4095 to fire only on press.
   ads.setLowThreshold(BUTTON_CH, 1000);
-  ads.setHighThreshold(BUTTON_CH,
-                       4095); // Change to 3000 to trigger on release as well!
+  ads.setHighThreshold(BUTTON_CH, 3000);
 
   // Enable DWC and alert on CH0
   ads.enableDWC(true);
@@ -59,9 +59,16 @@ void loop() {
   // Read CH0 so the DWC can compare against thresholds
   uint16_t raw = ads.analogRead(BUTTON_CH);
 
-  // Poll the low-threshold event flag for CH0
-  if (ads.getEventLowFlags() & (1 << BUTTON_CH)) {
-    Serial.print(F("ALERT! CH0 raw = "));
+  uint8_t lowFlags = ads.getEventLowFlags();
+  uint8_t highFlags = ads.getEventHighFlags();
+  uint8_t mask = (1 << BUTTON_CH);
+
+  if (lowFlags & mask) {
+    Serial.print(F("PRESSED!  CH0 raw = "));
+    Serial.println(raw);
+    ads.clearEventFlags();
+  } else if (highFlags & mask) {
+    Serial.print(F("RELEASED! CH0 raw = "));
     Serial.println(raw);
     ads.clearEventFlags();
   }
