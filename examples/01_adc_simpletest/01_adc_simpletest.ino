@@ -1,5 +1,5 @@
 /*!
- * @file adc_simpletest.ino
+ * @file 01_adc_simpletest.ino
  * @brief Read all 8 ADC channels in manual mode
  *
  * Reads all 8 channels and prints raw values and voltages.
@@ -22,7 +22,8 @@ void setup() {
   Serial.println(F("ADS7128 ADC Simple Test"));
   Serial.println(F("======================="));
 
-  if (!adc.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!adc.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1) {
       delay(100);

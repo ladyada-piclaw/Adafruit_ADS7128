@@ -1,5 +1,5 @@
 /*!
- * @file gpio_test.ino
+ * @file 02_gpio_test.ino
  * @brief ADS7128 GPIO output/input test
  *
  * Configures channel 0 as push-pull output, channel 1 as digital input.
@@ -23,7 +23,8 @@ void setup() {
   Serial.println(F("ADS7128 GPIO Test"));
   Serial.println(F("================="));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1) {
       delay(100);

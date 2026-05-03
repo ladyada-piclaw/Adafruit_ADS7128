@@ -1,5 +1,5 @@
 /*!
- * @file zcd_demo.ino
+ * @file 07_zcd_demo.ino
  * @brief ADS7128 Zero-Crossing Detection demo
  *
  * Uses a fast PWM signal on Arduino pin 10 as a pseudo-AC source.
@@ -27,7 +27,8 @@ void setup() {
   Serial.println(F("ADS7128 Zero-Crossing Detection Demo"));
   Serial.println(F("====================================="));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1)
       delay(10);

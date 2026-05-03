@@ -1,5 +1,5 @@
 /*!
- * @file autonomous_alert_buttons.ino
+ * @file 06_autonomous_alert_buttons.ino
  * @brief ADS7128 8-button interrupt example using digital inputs + ALERT
  *
  * Detects button presses on all 8 channels without polling over I2C.
@@ -40,7 +40,8 @@ void setup() {
   Serial.println(F("Detects button presses on CH0-CH7 via ALERT interrupt."));
   Serial.println(F("No I2C polling needed — DWC monitors digital inputs."));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1)
       delay(100);

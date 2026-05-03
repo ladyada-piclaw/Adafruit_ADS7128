@@ -1,5 +1,5 @@
 /*!
- * @file simple_alert_button.ino
+ * @file 05_simple_alert_button.ino
  * @brief ADS7128 analog threshold alert example using DWC + ALERT pin
  *
  * Monitors CH0 as an analog input with a voltage threshold. When the
@@ -36,7 +36,8 @@ void setup() {
   Serial.println(F("ADS7128 Analog Threshold Alert Example"));
   Serial.println(F("======================================="));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1)
       delay(100);

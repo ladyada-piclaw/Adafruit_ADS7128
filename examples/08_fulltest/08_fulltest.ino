@@ -1,5 +1,5 @@
 /*!
- * @file ads7128_fulltest.ino
+ * @file 08_fulltest.ino
  * @brief Full test sketch for ADS7128 8-Channel 12-Bit ADC
  *
  * Displays configuration and continuous ADC readings.
@@ -24,7 +24,8 @@ void setup() {
   Serial.println(F("ADS7128 Full Test"));
   Serial.println(F("================="));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Couldn't find ADS7128!"));
     while (1)
       delay(10);

@@ -1,5 +1,5 @@
 /*!
- * @file gpio_chase.ino
+ * @file 03_gpio_chase.ino
  * @brief ADS7128 GPIO LED chaser — pulse train across CH0-CH7
  *
  * Cycles a 100ms HIGH pulse through channels 0 to 7.
@@ -19,7 +19,8 @@ void setup() {
   Serial.println(F("ADS7128 GPIO LED Chase"));
   Serial.println(F("======================"));
 
-  if (!ads.begin()) {
+  // begin() defaults: address ADS7128_DEFAULT_ADDR (0x10), Wire bus &Wire
+  if (!ads.begin(ADS7128_DEFAULT_ADDR, &Wire)) {
     Serial.println(F("Failed to find ADS7128!"));
     while (1) {
       delay(100);
