@@ -50,8 +50,14 @@ void setup() {
   ads.enableDWC(true);
 
   // Configure ZCD module
-  ads.setZCDChannel(0);   // Monitor CH0
-  ads.setZCDBlanking(0);  // No blanking (detect every crossing)
+  ads.setZCDChannel(0); // Monitor CH0
+
+  // Blanking ignores N conversions after each crossing event. The ADS7128
+  // is sampling much faster than the PWM, so without blanking we get
+  // duplicate counts when the signal lingers near threshold or rings.
+  // 8 conversions of dead time per crossing is plenty at 490 Hz PWM.
+  ads.setZCDBlanking(8);
+
   ads.setZCDOutput(1, 2); // CH1 output = ZCD signal
   ads.enableZCDOutput(1, true);
 
