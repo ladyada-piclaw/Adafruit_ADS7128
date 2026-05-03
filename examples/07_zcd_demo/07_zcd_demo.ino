@@ -35,7 +35,7 @@ void setup() {
   }
 
   // Start PWM signal on pin 10 as a pseudo-AC source
-  ::pinMode(PWM_PIN, OUTPUT);
+  pinMode(PWM_PIN, OUTPUT);
   analogWrite(PWM_PIN, 128); // 50% duty
 
   // CH0 = analog input (default) — reads the PWM signal
@@ -68,20 +68,32 @@ void setup() {
   Serial.print(threshold * ADS_VREF / 4095.0, 2);
   Serial.println(F("V)"));
   Serial.println(F("CH0 = PWM input, CH1 = ZCD output (connect LED)"));
-  Serial.println(F("\nReading CH0 + ZCD output state:"));
+  Serial.println(F("\nCounting upward zero crossings on CH0:"));
 }
 
 void loop() {
-  // Use getRecent() — don't call analogRead() which disrupts auto-sequence
-  uint16_t raw = ads.getRecent(0);
-  bool zcdOut = ads.digitalRead(1);
+  static uint32_t crossings = 0;
+  static uint32_t lastReport = 0;
 
-  Serial.print(F("CH0: "));
-  Serial.print(raw);
-  Serial.print(F(" ("));
-  Serial.print(raw * ADS_VREF / 4095.0, 2);
-  Serial.print(F("V) ZCD_OUT: "));
-  Serial.println(zcdOut ? F("HIGH") : F("LOW"));
+  // Poll the high-threshold event flag and count each upward crossing.
+  // Reading getEventHighFlags() doesn't clear it — we have to clear flags
+  // ourselves so the next crossing can latch.
+  if (ads.getEventHighFlags() & 0x01) {
+    crossings++;
+    ads.clearEventFlags();
+  }
 
-  delay(200);
+  uint32_t now = millis();
+  if (now - lastReport >= 1000) {
+    Serial.print(F("Crossings/sec: "));
+    Serial.print(crossings);
+    Serial.print(F("   CH0: "));
+    uint16_t raw = ads.getRecent(0);
+    Serial.print(raw);
+    Serial.print(F(" ("));
+    Serial.print(raw * ADS_VREF / 4095.0, 2);
+    Serial.println(F("V)"));
+    crossings = 0;
+    lastReport = now;
+  }
 }
