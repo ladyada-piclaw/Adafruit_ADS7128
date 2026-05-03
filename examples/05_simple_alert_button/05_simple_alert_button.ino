@@ -9,7 +9,6 @@
  *
  * Hardware:
  * - CH0: Analog signal (e.g., 10K pull-up to AVDD with button to GND)
- * - ALERT pin connected to Arduino interrupt pin (D3 on Uno/Metro)
  *
  * Written by Limor 'ladyada' Fried with assistance from Claude Code for
  * Adafruit Industries. MIT license.
@@ -17,16 +16,9 @@
 
 #include <Adafruit_ADS7128.h>
 
-#define ALERT_PIN 3
 #define BUTTON_CH 0
 
 Adafruit_ADS7128 ads;
-
-volatile bool alertFired = false;
-
-void alertISR() {
-  alertFired = true;
-}
 
 void setup() {
   Serial.begin(115200);
@@ -55,15 +47,11 @@ void setup() {
   ads.setAlertChannels(1 << BUTTON_CH);
   ads.configureAlert(true, 0); // Push-pull, active low
 
-  // Clear any stale events
+  // Clear any stale events from power-up
   ads.clearEventFlags();
 
-  // Attach interrupt — ALERT is active low
-  pinMode(ALERT_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(ALERT_PIN), alertISR, FALLING);
-
   Serial.println(F("Monitoring CH0 analog input..."));
-  Serial.println(F("ALERT fires when signal drops below threshold."));
+  Serial.println(F("Event fires when signal drops below threshold."));
   Serial.println();
 }
 
@@ -71,12 +59,10 @@ void loop() {
   // Read CH0 so the DWC can compare against thresholds
   uint16_t raw = ads.analogRead(BUTTON_CH);
 
-  if (alertFired) {
-    alertFired = false;
-
+  // Poll the low-threshold event flag for CH0
+  if (ads.getEventLowFlags() & (1 << BUTTON_CH)) {
     Serial.print(F("ALERT! CH0 raw = "));
     Serial.println(raw);
-
     ads.clearEventFlags();
   }
 
